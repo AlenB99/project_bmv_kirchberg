@@ -12,7 +12,6 @@ import at.htlstp.bejinariu.models.Kleidungsstueck;
 import at.htlstp.bejinariu.models.Person;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,9 +31,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
-
 
 //Das ist ein Kommentar 
 /**
@@ -138,6 +139,17 @@ public class PersonDetailController implements Initializable {
     @FXML
     private DatePicker dpick_schuhe;
     private final List<ChoiceBox<Kleidungsstueck.Status>> choiseBoxen = new ArrayList<>();
+    @FXML
+    private ListView<Person> lstview_personen;
+    @FXML
+    private TextArea area_zk;
+    @FXML
+    private Button btn_loesche;
+    @FXML
+    private Button btnReport;
+    @FXML
+    private Button btn_sort;
+    private ObservableList<Person> people;
 
     /**
      * Initializes the controller class.
@@ -163,46 +175,39 @@ public class PersonDetailController implements Initializable {
             instance = HibernateDataMananger.getINSTANCE();
             //Testprogramm
             //Neue Person 
-            aktPerson = instance.getPersonByMitgliedNr(1); 
-            System.out.println(aktPerson);
-            setPersonDetails(aktPerson);
             textFieldToIntField(fld_hut, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
             textFieldToIntField(fld_hemd, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
-            textFieldToIntField(fld_hose, HHHG_MINSIZE, HHHG_MAXSIZE);//Nur INTs(0-100) werden erlaubtF
+            textFieldToIntField(fld_hose, HHHG_MINSIZE, HHHG_MAXSIZE);//Nur INTs(0-100) werden erlaubt
             textFieldToIntField(fld_guertel, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
 
             textFieldToTeleField(fld_telefonnr);
             textFieldToEmailField(fld_email);
-
             textFieldToDoubleField(fld_schuhe, SCHUHE_MINSIZE, SCHUHE_MAXSIZE); //Nur Doubles(0.0-100.0) werden erlaubt
-            dPickInit(dpick_wjacke, DATEMIN);
-            dPickInit(dpick_dirndl, DATEMIN);
-            dPickInit(dpick_guertel, DATEMIN);
-            dPickInit(dpick_gillette, DATEMIN);
-            dPickInit(dpick_buendel, DATEMIN);
-            dPickInit(dpick_hemd, DATEMIN);
-            dPickInit(dpick_hut, DATEMIN);
-            dPickInit(dpick_hose, DATEMIN);
-            dPickInit(dpick_schuhe, DATEMIN);
-            dPickInit(dpick_tracht, DATEMIN);
-            choise_wjacke.setValue(Kleidungsstueck.Status.Beim_Verein);
-            choise_dirndl.setValue(Kleidungsstueck.Status.Beim_Verein);
-            choise_guertel.setValue(Kleidungsstueck.Status.Beim_Verein);
-            choise_gillette.setValue(Kleidungsstueck.Status.Beim_Verein);
-            choise_buendel.setValue(Kleidungsstueck.Status.Beim_Verein);
-            choise_hemd.setValue(Kleidungsstueck.Status.Beim_Verein);
-            choise_hut.setValue(Kleidungsstueck.Status.Beim_Verein);
-            choise_hose.setValue(Kleidungsstueck.Status.Beim_Verein);
-            choise_schuhe.setValue(Kleidungsstueck.Status.Beim_Verein);
-            choise_tracht.setValue(Kleidungsstueck.Status.Beim_Verein);
+
+            people = FXCollections.observableArrayList((ArrayList<Person>) instance.loadAll());
+            System.out.println(people);
+            lstview_personen.setItems(people);
+            System.out.println(lstview_personen.toString());
+            lstview_personen.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+                if (newV == null) {
+                    //Detailansicht einer neuen Person zeigen oder etwas anderes? 
+                    newPerson();
+                } else {
+                    setPersonDetails(newV);
+                }
+            });
+            if (people.size() > 0) {
+                lstview_personen.getSelectionModel().selectFirst();
+            }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage() + e.getClass());
         }
 
     }
 
     public void setPersonDetails(Person p) {
         //Kontaktdaten 
+        aktPerson = p;
         fld_vorname.setText(p.getVorname());
         fld_nachname.setText(p.getNachname());
         fld_telefonnr.setText(p.getTelefonnr());
@@ -212,34 +217,53 @@ public class PersonDetailController implements Initializable {
             switch (stueck.getBezeichnung()) {
                 //Kleidungsstück werden je nach Bezeichnung identifiziert
                 case "Hut":
-                    speichereKleidungsstueckInDieGrafik(stueck, choise_hut, dpick_hut, fld_hut, TextField.class);
+                    speichereKleidungsstueckInDieGrafik(stueck, choise_hut, dpick_hut, fld_hut, TextField.class
+                    );
                     break;
+
                 case "Hemd":
-                    speichereKleidungsstueckInDieGrafik(stueck, choise_hemd, dpick_hemd, fld_hemd, TextField.class);
+                    speichereKleidungsstueckInDieGrafik(stueck, choise_hemd, dpick_hemd, fld_hemd, TextField.class
+                    );
                     break;
+
                 case "Hose":
-                    speichereKleidungsstueckInDieGrafik(stueck, choise_hose, dpick_hose, fld_hose, TextField.class);
+                    speichereKleidungsstueckInDieGrafik(stueck, choise_hose, dpick_hose, fld_hose, TextField.class
+                    );
                     break;
+
                 case "Winterjacke":
-                    speichereKleidungsstueckInDieGrafik(stueck, choise_wjacke, dpick_wjacke, choise_wjacke_groesse, ChoiceBox.class);
+                    speichereKleidungsstueckInDieGrafik(stueck, choise_wjacke, dpick_wjacke, choise_wjacke_groesse, ChoiceBox.class
+                    );
                     break;
+
                 case "Trachtenjanker":
-                    speichereKleidungsstueckInDieGrafik(stueck, choise_tracht, dpick_tracht, fld_tracht, TextField.class);
+                    speichereKleidungsstueckInDieGrafik(stueck, choise_tracht, dpick_tracht, fld_tracht, TextField.class
+                    );
                     break;
+
                 case "Dirndl":
-                    speichereKleidungsstueckInDieGrafik(stueck, choise_dirndl, dpick_dirndl, fld_dirndl, TextField.class);
+                    speichereKleidungsstueckInDieGrafik(stueck, choise_dirndl, dpick_dirndl, fld_dirndl, TextField.class
+                    );
                     break;
+
                 case "Bündel":
-                    speichereKleidungsstueckInDieGrafik(stueck, choise_buendel, dpick_buendel, fld_buendel, TextField.class);
+                    speichereKleidungsstueckInDieGrafik(stueck, choise_buendel, dpick_buendel, fld_buendel, TextField.class
+                    );
                     break;
+
                 case "Schuhe":
-                    speichereKleidungsstueckInDieGrafik(stueck, choise_schuhe, dpick_schuhe, fld_schuhe, TextField.class);
+                    speichereKleidungsstueckInDieGrafik(stueck, choise_schuhe, dpick_schuhe, fld_schuhe, TextField.class
+                    );
                     break;
+
                 case "Gillette":
-                    speichereKleidungsstueckInDieGrafik(stueck, choise_gillette, dpick_gillette, fld_gillette, TextField.class);
+                    speichereKleidungsstueckInDieGrafik(stueck, choise_gillette, dpick_gillette, fld_gillette, TextField.class
+                    );
                     break;
+
                 case "Gürtel":
-                    speichereKleidungsstueckInDieGrafik(stueck, choise_guertel, dpick_guertel, fld_guertel, TextField.class);
+                    speichereKleidungsstueckInDieGrafik(stueck, choise_guertel, dpick_guertel, fld_guertel, TextField.class
+                    );
                     break;
 
             }
@@ -259,8 +283,8 @@ public class PersonDetailController implements Initializable {
                 //Aktualisieren 
                 instance.refreshPerson(aktPerson);
             }
-        } else {
-            Utilities.showMessage("Fehler beim Speicheren", "Speichern war nicht erfolgreich", "Es sind " + fehlerCount.size() + " Fehler aufgetreten, bitte überprüfen Sie die Felder nach Gültigkeit", Alert.AlertType.ERROR, false);
+        } else if (ButtonType.YES.equals(answer) && !fehlerCount.isEmpty()) {
+            Utilities.showMessage("Fehler beim Speicheren", "Speichern war nicht erfolgreich", "Es sind " + fehlerCount.size() + " Fehler aufgetreten, bitte überprüfen Sie die Felder auf Gültigkeit", Alert.AlertType.ERROR, false);
         }
 
     }
@@ -278,16 +302,26 @@ public class PersonDetailController implements Initializable {
                 k -> exist.add(k.getBezeichnung())
         );
 
-        speichereKleidungsstueckeVonGrafik(person, "Hut", choise_hut, dpick_hut, fld_hut, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Hemd", choise_hemd, dpick_hemd, fld_hemd, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Hose", choise_hose, dpick_hose, fld_hose, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Winterjacke", choise_wjacke, dpick_wjacke, choise_wjacke_groesse, ChoiceBox.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Trachtenjanker", choise_tracht, dpick_tracht, fld_tracht, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Gillette", choise_gillette, dpick_gillette, fld_gillette, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Dirndl", choise_dirndl, dpick_dirndl, fld_dirndl, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Gürtel", choise_guertel, dpick_guertel, fld_guertel, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Bündel", choise_buendel, dpick_buendel, fld_buendel, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Schuhe", choise_schuhe, dpick_schuhe, fld_schuhe, TextField.class, exist);
+        speichereKleidungsstueckeVonGrafik(person, "Hut", choise_hut, dpick_hut, fld_hut, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Hemd", choise_hemd, dpick_hemd, fld_hemd, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Hose", choise_hose, dpick_hose, fld_hose, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Winterjacke", choise_wjacke, dpick_wjacke, choise_wjacke_groesse, ChoiceBox.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Trachtenjanker", choise_tracht, dpick_tracht, fld_tracht, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Gillette", choise_gillette, dpick_gillette, fld_gillette, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Dirndl", choise_dirndl, dpick_dirndl, fld_dirndl, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Gürtel", choise_guertel, dpick_guertel, fld_guertel, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Bündel", choise_buendel, dpick_buendel, fld_buendel, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Schuhe", choise_schuhe, dpick_schuhe, fld_schuhe, TextField.class,
+                exist);
 
     }
 
@@ -313,9 +347,13 @@ public class PersonDetailController implements Initializable {
         }
         ks.setStatus(status.getValue());
         ks.setAenderungsdatum(Date.from(zeitpunkt.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        if (groesseNodeClass.equals(TextField.class)) {
+
+        if (groesseNodeClass.equals(TextField.class
+        )) {
             ks.setKleidungsgroesse(((TextField) groesse).getText());
-        } else if (groesseNodeClass.equals(ChoiceBox.class)) {
+
+        } else if (groesseNodeClass.equals(ChoiceBox.class
+        )) {
             ks.setKleidungsgroesse(((ChoiceBox<Kleidungsstueck.Groesse>) groesse).getValue().toString());
         }
 
@@ -325,12 +363,12 @@ public class PersonDetailController implements Initializable {
 
         choise.setValue(ks.getStatus());
         dpick.setValue(ks.getAenderungsdatum().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+
         if (groesseNodeClass.equals(TextField.class)) {
             ((TextField) node).setText(ks.getKleidungsgroesse());
         } else if (groesseNodeClass.equals(ChoiceBox.class)) {
             ((ChoiceBox<Kleidungsstueck.Groesse>) node).setValue(Kleidungsstueck.Groesse.valueOf(ks.getKleidungsgroesse()));
         }
-
     }
 
     private void textFieldToIntField(TextField txtField, int minSize, int maxSize) {
@@ -340,26 +378,28 @@ public class PersonDetailController implements Initializable {
             try {
                 intSize = Integer.parseInt(txtField.getText());
                 if (intSize < minSize) {
-                    txtField.setText(minSize + "");
+                    Utilities.setRedErrorBorder(txtField);
                 } else if (intSize > maxSize) {
-                    txtField.setText(maxSize + "");
+                    Utilities.setRedErrorBorder(txtField);
+                } else {
+                    Utilities.removeRedErrorBorder(txtField);
                 }
-            } catch (NumberFormatException e) {
-                txtField.setText(oldValue);
-            }
 
+            } catch (NumberFormatException e) {
+                Utilities.setRedErrorBorder(txtField);
+            }
         });
     }
 
     private void textFieldToEmailField(TextField txtField) {
 
         txtField.textProperty().addListener((observable, oldValue, newValue) -> {
-               String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+            String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
             java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
             java.util.regex.Matcher m = p.matcher(newValue);
-            if(m.matches()){
+            if (m.matches()) {
                 Utilities.removeRedErrorBorder(txtField);
-            }else{
+            } else {
                 Utilities.setRedErrorBorder(txtField);
             }
         });
@@ -383,12 +423,14 @@ public class PersonDetailController implements Initializable {
             try {
                 doubleSize = Double.parseDouble(txtField.getText());
                 if (doubleSize < minSize) {
-                    txtField.setText(minSize + "");
+                    Utilities.setRedErrorBorder(txtField);
                 } else if (doubleSize > maxSize) {
-                    txtField.setText(maxSize + "");
+                    Utilities.setRedErrorBorder(txtField);
+                } else {
+                    Utilities.removeRedErrorBorder(txtField);
                 }
+
             } catch (NumberFormatException e) {
-                txtField.setText(oldValue);
                 Utilities.setRedErrorBorder(txtField);
             }
         });
@@ -411,5 +453,51 @@ public class PersonDetailController implements Initializable {
 
         dpDate.setDayCellFactory(dayCellFactory);
 
+    }
+
+    @FXML
+    private void onActionLoeschen(ActionEvent event) {
+    }
+
+    @FXML
+    private void onActionReportGenerate(ActionEvent event) {
+    }
+
+    @FXML
+    private void onActionSortPersonen(ActionEvent event) {
+    }
+
+    public void newPerson() {
+        aktPerson = new Person();
+        fld_nachname.setText("Mustermann");
+        fld_vorname.setText("Max");
+        fld_email.setText("max@gmail.com");
+        fld_telefonnr.setText("0660060606060");
+        fld_hose.setText("0");
+        fld_hemd.setText("0");
+        fld_hut.setText("0");
+        fld_guertel.setText("0");
+        fld_schuhe.setText("0.0");
+        choise_wjacke_groesse.getSelectionModel().selectFirst();
+        dPickInit(dpick_wjacke, DATEMIN);
+        dPickInit(dpick_dirndl, DATEMIN);
+        dPickInit(dpick_guertel, DATEMIN);
+        dPickInit(dpick_gillette, DATEMIN);
+        dPickInit(dpick_buendel, DATEMIN);
+        dPickInit(dpick_hemd, DATEMIN);
+        dPickInit(dpick_hut, DATEMIN);
+        dPickInit(dpick_hose, DATEMIN);
+        dPickInit(dpick_schuhe, DATEMIN);
+        dPickInit(dpick_tracht, DATEMIN);
+        choise_wjacke.setValue(Kleidungsstueck.Status.Beim_Verein);
+        choise_dirndl.setValue(Kleidungsstueck.Status.Beim_Verein);
+        choise_guertel.setValue(Kleidungsstueck.Status.Beim_Verein);
+        choise_gillette.setValue(Kleidungsstueck.Status.Beim_Verein);
+        choise_buendel.setValue(Kleidungsstueck.Status.Beim_Verein);
+        choise_hemd.setValue(Kleidungsstueck.Status.Beim_Verein);
+        choise_hut.setValue(Kleidungsstueck.Status.Beim_Verein);
+        choise_hose.setValue(Kleidungsstueck.Status.Beim_Verein);
+        choise_schuhe.setValue(Kleidungsstueck.Status.Beim_Verein);
+        choise_tracht.setValue(Kleidungsstueck.Status.Beim_Verein);
     }
 }
