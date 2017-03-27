@@ -164,6 +164,7 @@ public class PersonDetailController implements Initializable {
             //Testprogramm
             //Neue Person 
             aktPerson = instance.getPersonByMitgliedNr(1); 
+            System.out.println(aktPerson);
             setPersonDetails(aktPerson);
             textFieldToIntField(fld_hut, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
             textFieldToIntField(fld_hemd, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
