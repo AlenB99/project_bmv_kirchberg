@@ -66,17 +66,17 @@
             <Label text="Trachtenjanker" GridPane.rowIndex="5" />
             <ChoiceBox fx:id="choise_tracht" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
             <DatePicker fx:id="dpick_tracht" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-            <TextField fx:id="fld_tracht" editable="false" prefWidth="120.0" text="maßgeschneidet" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="fld_tracht" editable="false" prefWidth="120.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label text="Bündel" GridPane.rowIndex="6" />
-            <TextField fx:id="fld_buendel" editable="false" prefWidth="120.0" text="maßgeschneidet" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="fld_buendel" editable="false" prefWidth="120.0" text="keine Größe" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <ChoiceBox fx:id="choise_buendel" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
             <DatePicker fx:id="dpick_buendel" GridPane.columnIndex="3" GridPane.rowIndex="6" />
             <Label text="Gillette" GridPane.rowIndex="7" />
-            <TextField fx:id="fld_gillette" editable="false" prefWidth="120.0" text="keine Größe" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <TextField fx:id="fld_gillette" editable="false" prefWidth="120.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <ChoiceBox fx:id="choise_gillette" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
             <DatePicker fx:id="dpick_gillette" GridPane.columnIndex="3" GridPane.rowIndex="7" />
             <Label text="Dirndl" GridPane.rowIndex="8" />
-            <TextField fx:id="fld_dirndl" editable="false" prefWidth="120.0" text="maßgeschneidet" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <TextField fx:id="fld_dirndl" editable="false" prefWidth="120.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <ChoiceBox fx:id="choise_dirndl" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
             <DatePicker fx:id="dpick_dirndl" GridPane.columnIndex="3" GridPane.rowIndex="8" />
             <Label text="Gürtel" GridPane.rowIndex="9" />
