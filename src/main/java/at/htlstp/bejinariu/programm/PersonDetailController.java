@@ -163,8 +163,7 @@ public class PersonDetailController implements Initializable {
             instance = HibernateDataMananger.getINSTANCE();
             //Testprogramm
             //Neue Person 
-            aktPerson = new Person();
-            System.out.println(aktPerson);
+            aktPerson = instance.getPersonByMitgliedNr(1); 
             setPersonDetails(aktPerson);
             textFieldToIntField(fld_hut, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
             textFieldToIntField(fld_hemd, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
@@ -172,7 +171,6 @@ public class PersonDetailController implements Initializable {
             textFieldToIntField(fld_guertel, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
 
             textFieldToTeleField(fld_telefonnr);
-
             textFieldToEmailField(fld_email);
 
             textFieldToDoubleField(fld_schuhe, SCHUHE_MINSIZE, SCHUHE_MAXSIZE); //Nur Doubles(0.0-100.0) werden erlaubt
