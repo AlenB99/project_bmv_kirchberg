@@ -6,6 +6,8 @@
 package at.htlstp.bejinariu.datamanager;
 
 import at.htlstp.bejinariu.models.Person;
+import java.util.List;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -19,6 +21,20 @@ public class HibernateDataMananger implements DataManager, AutoCloseable {
 
     public static HibernateDataMananger getINSTANCE() {
         return INSTANCE;
+    }
+
+    public List<Person> loadAll() {
+        Session session = null;
+        try {
+            session = HibernateJPAUtil.getSessionFactory().openSession();
+            Query qu = session.createQuery("from Person");
+            return qu.list();
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            return null;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
@@ -74,7 +90,25 @@ public class HibernateDataMananger implements DataManager, AutoCloseable {
 
     @Override
     public boolean deletePerson(Person personToDelete) {
+        Session session = null;
+        Transaction t = null;
+        try {
+            session = HibernateJPAUtil.getSessionFactory().openSession();
+            t = session.beginTransaction();
+            session.delete(personToDelete);
+            t.commit();
+            return true;
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            if (t.isActive()) {
+                t.rollback();
+                return false;
+            }
+        } finally {
+            session.close();
+        }
         return false;
+
     }
 
     @Override
@@ -84,7 +118,8 @@ public class HibernateDataMananger implements DataManager, AutoCloseable {
         try {
             session = HibernateJPAUtil.getSessionFactory().openSession();
             t = session.beginTransaction();
-            Person person = (Person) session.get(Person.class, i);
+            Person person = (Person) session.get(Person.class,
+                     i);
             t.commit();
             return person;
         } catch (Exception e) {

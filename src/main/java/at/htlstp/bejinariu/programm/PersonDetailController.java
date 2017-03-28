@@ -32,8 +32,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 
 //Das ist ein Kommentar 
@@ -146,10 +148,14 @@ public class PersonDetailController implements Initializable {
     @FXML
     private Button btn_loesche;
     @FXML
-    private Button btnReport;
-    @FXML
     private Button btn_sort;
     private ObservableList<Person> people;
+    @FXML
+    private RadioButton rdb_markentender;
+    @FXML
+    private Button btn_report;
+    @FXML
+    private Button btn_neu;
 
     /**
      * Initializes the controller class.
@@ -189,9 +195,9 @@ public class PersonDetailController implements Initializable {
             lstview_personen.setItems(people);
             System.out.println(lstview_personen.toString());
             lstview_personen.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+
                 if (newV == null) {
-                    //Detailansicht einer neuen Person zeigen oder etwas anderes? 
-                    newPerson();
+                    lstview_personen.getSelectionModel().select(oldV);
                 } else {
                     setPersonDetails(newV);
                 }
@@ -212,6 +218,8 @@ public class PersonDetailController implements Initializable {
         fld_nachname.setText(p.getNachname());
         fld_telefonnr.setText(p.getTelefonnr());
         fld_email.setText(p.getEmail());
+        area_zk.setText(p.getAnmerkung());
+        rdb_markentender.setSelected(p.isIsMarkentender());
 
         for (Kleidungsstueck stueck : p.getKleidungsstuecke()) {
             switch (stueck.getBezeichnung()) {
@@ -279,10 +287,12 @@ public class PersonDetailController implements Initializable {
             if (aktPerson.getPersonId() == null) {
                 //Speichern einer neuen Person 
                 instance.storePerson(aktPerson);
+                people.add(aktPerson);
             } else {
                 //Aktualisieren 
                 instance.refreshPerson(aktPerson);
             }
+
         } else if (ButtonType.YES.equals(answer) && !fehlerCount.isEmpty()) {
             Utilities.showMessage("Fehler beim Speicheren", "Speichern war nicht erfolgreich", "Es sind " + fehlerCount.size() + " Fehler aufgetreten, bitte überprüfen Sie die Felder auf Gültigkeit", Alert.AlertType.ERROR, false);
         }
@@ -295,6 +305,8 @@ public class PersonDetailController implements Initializable {
         person.setVorname(fld_vorname.getText());
         person.setNachname(fld_nachname.getText());
         person.setTelefonnr(fld_telefonnr.getText());
+        person.setAnmerkung(area_zk.getText());
+        person.setIsMarkentender(rdb_markentender.isSelected());
 
         //Kleidungsstuecksliste aktualisieren
         List<String> exist = new ArrayList<>();
@@ -411,7 +423,6 @@ public class PersonDetailController implements Initializable {
             if (!newValue.matches("\\d*")) {
                 txtField.setText(newValue.replaceAll("[^\\d]", ""));
             }
-
         });
     }
 
@@ -467,6 +478,10 @@ public class PersonDetailController implements Initializable {
     private void onActionSortPersonen(ActionEvent event) {
     }
 
+    @FXML
+    private void onActionNeuePerson(ActionEvent event) {
+    }
+
     public void newPerson() {
         aktPerson = new Person();
         fld_nachname.setText("Mustermann");
@@ -500,4 +515,5 @@ public class PersonDetailController implements Initializable {
         choise_schuhe.setValue(Kleidungsstueck.Status.Beim_Verein);
         choise_tracht.setValue(Kleidungsstueck.Status.Beim_Verein);
     }
+
 }

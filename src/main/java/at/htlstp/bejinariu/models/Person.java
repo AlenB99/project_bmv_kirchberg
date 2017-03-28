@@ -171,14 +171,18 @@ public class Person implements Serializable {
     }
 
     //Kontrollausgaben 
-    @Override
-    public String toString() {
+   
+    public String toStringAdvanced() {
         String result = "Person{" + "personId=" + personId + ", vorname=" + vorname + ", nachname=" + nachname + ", telefonnr=" + telefonnr + ", email=" + email + ", anmerkung=" + anmerkung + ", isMarkentender=" + isMarkentender + '}';
         result += result + "\n";
         for (Kleidungsstueck k : kleidungsstuecke) {
             result = result + k.getBezeichnung() + ", " + k.getKleidungsgroesse() + ", " + k.getAenderungsdatum() + ", " + k.getStatus() + "\n";
         }
         return result;
+    }
+    
+    public String toString(){
+        return vorname + " " + nachname; 
     }
 
 }

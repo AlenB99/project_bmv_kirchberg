@@ -5,9 +5,7 @@
  */
 package at.htlstp.bejinariu.programm;
 
-import at.htlstp.bejinariu.datamanager.HibernateDataMananger;
 import at.htlstp.bejinariu.launch.Intro_Slide_FX;
-import at.htlstp.bejinariu.models.Person;
 import at.htlstp.bejinariu.graphictools.Utilities;
 import java.sql.SQLException;
 import javafx.application.Application;
@@ -15,7 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import logindata.LoginDataHandler;
 
@@ -63,16 +61,17 @@ public class Ausfuehrbar extends Application {
             //switch (loginFXApplication.getUser()) {
          
             FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/personDetail.fxml"));
-            Parent root =(AnchorPane) loader.load(); 
+            Parent root =(BorderPane) loader.load(); 
             primaryStage.setScene(new Scene(root));
             PersonDetailController controller = loader.getController();
             primaryStage.setOnCloseRequest(e -> controller.close());
-            new Intro_Slide_FX(3000, primaryStage, Intro_Slide_FX.Position.TOP).slideAndShowStage();
+            new Intro_Slide_FX(1000, primaryStage, Intro_Slide_FX.Position.TOP).slideAndShowStage();
            
            
 
         } catch (Exception e) {
             Utilities.showMessage("Fehler", "Problem beim Starten", "Das Laden der Applikation schlug fehl. Wenden Sie sich an den Hersteller", Alert.AlertType.ERROR, false);
+            System.out.println(e.getMessage());
         }
     }
 
