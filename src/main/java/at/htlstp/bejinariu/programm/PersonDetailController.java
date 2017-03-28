@@ -7,7 +7,6 @@ package at.htlstp.bejinariu.programm;
 
 import at.htlstp.bejinariu.datamanager.HibernateDataMananger;
 import at.htlstp.bejinariu.graphictools.Utilities;
-import static at.htlstp.bejinariu.graphictools.Utilities.fehlerCount;
 import at.htlstp.bejinariu.models.Kleidungsstueck;
 import at.htlstp.bejinariu.models.Person;
 import java.net.URL;
@@ -19,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,11 +31,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 //Das ist ein Kommentar 
@@ -57,7 +58,7 @@ public class PersonDetailController implements Initializable {
     @FXML
     private Button btn_speichern;
     private HibernateDataMananger instance;
-    private Person aktPerson;
+    private Person aktPerson = null;
     @FXML
     private ChoiceBox<Kleidungsstueck.Status> choise_hut;
     @FXML
@@ -156,6 +157,8 @@ public class PersonDetailController implements Initializable {
     private Button btn_report;
     @FXML
     private Button btn_neu;
+    @FXML
+    private Label lbl_info;
 
     /**
      * Initializes the controller class.
@@ -179,8 +182,7 @@ public class PersonDetailController implements Initializable {
             }
             choise_wjacke_groesse.setItems(FXCollections.observableArrayList(GROESSEN));
             instance = HibernateDataMananger.getINSTANCE();
-            //Testprogramm
-            //Neue Person 
+            //Fehlerquellen werdne hier anerkannt 
             textFieldToIntField(fld_hut, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
             textFieldToIntField(fld_hemd, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
             textFieldToIntField(fld_hose, HHHG_MINSIZE, HHHG_MAXSIZE);//Nur INTs(0-100) werden erlaubt
@@ -189,22 +191,47 @@ public class PersonDetailController implements Initializable {
             textFieldToTeleField(fld_telefonnr);
             textFieldToEmailField(fld_email);
             textFieldToDoubleField(fld_schuhe, SCHUHE_MINSIZE, SCHUHE_MAXSIZE); //Nur Doubles(0.0-100.0) werden erlaubt
+            textFieldName(fld_vorname);
+            textFieldName(fld_nachname);
 
+            //Alle Personen werden in die Liste geladen, Liste wird mit der ListView gekoppelt 
             people = FXCollections.observableArrayList((ArrayList<Person>) instance.loadAll());
-            System.out.println(people);
             lstview_personen.setItems(people);
-            System.out.println(lstview_personen.toString());
+
+            //Listener für die Liste 
             lstview_personen.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
 
                 if (newV == null) {
+                    //Deselektieren verhindern 
                     lstview_personen.getSelectionModel().select(oldV);
                 } else {
+                    //Details der Person werden in die Grafik geladen 
                     setPersonDetails(newV);
                 }
             });
+            //Wenn keine Personen in der Datenbank vorhanden sind    
             if (people.size() > 0) {
+                //Erstes Element selektieren(immer vorhanden)
                 lstview_personen.getSelectionModel().selectFirst();
+            } else {
+                //Eine neue Person wird benötigt 
+                onActionNeuePerson(null);
             }
+            
+            Utilities.fehlerCountProperty().addListener((Observable observable) -> {
+                if(Utilities.fehlerCountProperty().isEmpty()){
+                    lbl_info.setText("Info: Alle Eingaben sind richting*");
+                    lbl_info.setVisible(true);
+                    lbl_info.setTextFill(Color.web("green"));
+                }else {
+                    lbl_info.setText("Info: " + Utilities.fehlerCountProperty().size() + " Textfelder beinhalten falsche Werte oder sind leer*");
+                    lbl_info.setVisible(true);
+                    lbl_info.setTextFill(Color.web("red"));
+                }
+            });
+             
+            
+
         } catch (Exception e) {
             System.out.println(e.getMessage() + e.getClass());
         }
@@ -282,19 +309,22 @@ public class PersonDetailController implements Initializable {
     @FXML
     private void onActionSpeichern(ActionEvent event) {
         ButtonType answer = at.htlstp.bejinariu.graphictools.Utilities.showJesNoDialog("Änderungen speichern", "Bestätigung");
-        if (ButtonType.YES.equals(answer) && fehlerCount.isEmpty()) {
+        if (ButtonType.YES.equals(answer) && Utilities.fehlerCountProperty().isEmpty()) {
             getPersonDetails(aktPerson);
             if (aktPerson.getPersonId() == null) {
                 //Speichern einer neuen Person 
                 instance.storePerson(aktPerson);
+                //Person wird in die aktuelle Liste ebenfalls aufgenommen 
                 people.add(aktPerson);
+                //Person selektieren
+                lstview_personen.getSelectionModel().select(aktPerson);
             } else {
                 //Aktualisieren 
                 instance.refreshPerson(aktPerson);
             }
-
-        } else if (ButtonType.YES.equals(answer) && !fehlerCount.isEmpty()) {
-            Utilities.showMessage("Fehler beim Speicheren", "Speichern war nicht erfolgreich", "Es sind " + fehlerCount.size() + " Fehler aufgetreten, bitte überprüfen Sie die Felder auf Gültigkeit", Alert.AlertType.ERROR, false);
+            lstview_personen.refresh();
+        } else if (ButtonType.YES.equals(answer) && !Utilities.fehlerCountProperty().isEmpty()) {   //Speichern nicht möglich 
+            Utilities.showMessage("Fehler beim Speicheren", "Speichern war nicht erfolgreich", "Es sind " + Utilities.fehlerCountProperty().size() + " Fehler aufgetreten, bitte überprüfen Sie die Felder auf Gültigkeit", Alert.AlertType.ERROR, false);
         }
 
     }
@@ -314,26 +344,16 @@ public class PersonDetailController implements Initializable {
                 k -> exist.add(k.getBezeichnung())
         );
 
-        speichereKleidungsstueckeVonGrafik(person, "Hut", choise_hut, dpick_hut, fld_hut, TextField.class,
-                exist);
-        speichereKleidungsstueckeVonGrafik(person, "Hemd", choise_hemd, dpick_hemd, fld_hemd, TextField.class,
-                exist);
-        speichereKleidungsstueckeVonGrafik(person, "Hose", choise_hose, dpick_hose, fld_hose, TextField.class,
-                exist);
-        speichereKleidungsstueckeVonGrafik(person, "Winterjacke", choise_wjacke, dpick_wjacke, choise_wjacke_groesse, ChoiceBox.class,
-                exist);
-        speichereKleidungsstueckeVonGrafik(person, "Trachtenjanker", choise_tracht, dpick_tracht, fld_tracht, TextField.class,
-                exist);
-        speichereKleidungsstueckeVonGrafik(person, "Gillette", choise_gillette, dpick_gillette, fld_gillette, TextField.class,
-                exist);
-        speichereKleidungsstueckeVonGrafik(person, "Dirndl", choise_dirndl, dpick_dirndl, fld_dirndl, TextField.class,
-                exist);
-        speichereKleidungsstueckeVonGrafik(person, "Gürtel", choise_guertel, dpick_guertel, fld_guertel, TextField.class,
-                exist);
-        speichereKleidungsstueckeVonGrafik(person, "Bündel", choise_buendel, dpick_buendel, fld_buendel, TextField.class,
-                exist);
-        speichereKleidungsstueckeVonGrafik(person, "Schuhe", choise_schuhe, dpick_schuhe, fld_schuhe, TextField.class,
-                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Hut", choise_hut, dpick_hut, fld_hut, TextField.class, exist);
+        speichereKleidungsstueckeVonGrafik(person, "Hemd", choise_hemd, dpick_hemd, fld_hemd, TextField.class, exist);
+        speichereKleidungsstueckeVonGrafik(person, "Hose", choise_hose, dpick_hose, fld_hose, TextField.class, exist);
+        speichereKleidungsstueckeVonGrafik(person, "Winterjacke", choise_wjacke, dpick_wjacke, choise_wjacke_groesse, ChoiceBox.class, exist);
+        speichereKleidungsstueckeVonGrafik(person, "Trachtenjanker", choise_tracht, dpick_tracht, fld_tracht, TextField.class, exist);
+        speichereKleidungsstueckeVonGrafik(person, "Gillette", choise_gillette, dpick_gillette, fld_gillette, TextField.class, exist);
+        speichereKleidungsstueckeVonGrafik(person, "Dirndl", choise_dirndl, dpick_dirndl, fld_dirndl, TextField.class, exist);
+        speichereKleidungsstueckeVonGrafik(person, "Gürtel", choise_guertel, dpick_guertel, fld_guertel, TextField.class, exist);
+        speichereKleidungsstueckeVonGrafik(person, "Bündel", choise_buendel, dpick_buendel, fld_buendel, TextField.class, exist);
+        speichereKleidungsstueckeVonGrafik(person, "Schuhe", choise_schuhe, dpick_schuhe, fld_schuhe, TextField.class, exist);
 
     }
 
@@ -360,12 +380,10 @@ public class PersonDetailController implements Initializable {
         ks.setStatus(status.getValue());
         ks.setAenderungsdatum(Date.from(zeitpunkt.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-        if (groesseNodeClass.equals(TextField.class
-        )) {
+        if (groesseNodeClass.equals(TextField.class)) {
             ks.setKleidungsgroesse(((TextField) groesse).getText());
 
-        } else if (groesseNodeClass.equals(ChoiceBox.class
-        )) {
+        } else if (groesseNodeClass.equals(ChoiceBox.class)) {
             ks.setKleidungsgroesse(((ChoiceBox<Kleidungsstueck.Groesse>) groesse).getValue().toString());
         }
 
@@ -420,8 +438,12 @@ public class PersonDetailController implements Initializable {
     private void textFieldToTeleField(TextField txtField) {
         txtField.setText("0");
         txtField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                txtField.setText(newValue.replaceAll("[^\\d]", ""));
+            if (newValue.isEmpty()) {
+                Utilities.setRedErrorBorder(txtField);
+            } else if (!newValue.matches("\\d*")) {
+                Utilities.setRedErrorBorder(txtField);
+            } else {
+                Utilities.removeRedErrorBorder(txtField);
             }
         });
     }
@@ -468,6 +490,26 @@ public class PersonDetailController implements Initializable {
 
     @FXML
     private void onActionLoeschen(ActionEvent event) {
+        ButtonType response = Utilities.showJesNoDialog("Person wirklich unwiderruflich löschen?", "Bestätigung gebraucht");
+        if (response.equals(ButtonType.YES)) {
+            int index = people.indexOf(aktPerson);  //Index der Person in der Liste 
+            if (aktPerson.getPersonId() != null) {
+                instance.deletePerson(aktPerson);   //Person aus der Datenabk löschen, wenn nötig
+            }
+            //Person wird von der Liste gestrichen 
+            people.remove(aktPerson);
+            //Welches Element soll nun selektiert werden: 
+            if (people.isEmpty()) {
+                newPerson();    //Keine Elemente vorhanden, neue Person 
+            } else if (index == people.size()) {    //Letztes Element wurde gelöscht, 
+                lstview_personen.getSelectionModel().select(index - 1);
+            } else if (index == 0 && people.size() >= 1) {  //Erstes Element wurde gelöscht, das zweite Element wird selektiert
+                lstview_personen.getSelectionModel().select(1);
+            } else {        //Element befindet sich mittendrin, das nächste Element wird selektiert 
+                lstview_personen.getSelectionModel().select(index);
+            }
+        }
+
     }
 
     @FXML
@@ -480,19 +522,20 @@ public class PersonDetailController implements Initializable {
 
     @FXML
     private void onActionNeuePerson(ActionEvent event) {
+        newPerson();
     }
 
     public void newPerson() {
         aktPerson = new Person();
-        fld_nachname.setText("Mustermann");
-        fld_vorname.setText("Max");
-        fld_email.setText("max@gmail.com");
-        fld_telefonnr.setText("0660060606060");
-        fld_hose.setText("0");
-        fld_hemd.setText("0");
-        fld_hut.setText("0");
-        fld_guertel.setText("0");
-        fld_schuhe.setText("0.0");
+        fld_nachname.setText("");
+        fld_vorname.setText("");
+        fld_email.setText("");
+        fld_telefonnr.setText("");
+        fld_hose.setText("");
+        fld_hemd.setText("");
+        fld_hut.setText("");
+        fld_guertel.setText("");
+        fld_schuhe.setText("");
         choise_wjacke_groesse.getSelectionModel().selectFirst();
         dPickInit(dpick_wjacke, DATEMIN);
         dPickInit(dpick_dirndl, DATEMIN);
@@ -514,6 +557,22 @@ public class PersonDetailController implements Initializable {
         choise_hose.setValue(Kleidungsstueck.Status.Beim_Verein);
         choise_schuhe.setValue(Kleidungsstueck.Status.Beim_Verein);
         choise_tracht.setValue(Kleidungsstueck.Status.Beim_Verein);
+        area_zk.setText("");
+        rdb_markentender.setSelected(false);
+    }
+
+    private void textFieldName(TextField f) {
+
+        f.textProperty().addListener((obs, olD, newV) -> {
+            if (newV.isEmpty()) {
+                Utilities.setRedErrorBorder(f);
+            } else if (!newV.matches("[a-zA-Z ]+")) {
+                Utilities.setRedErrorBorder(f);
+            } else {
+                Utilities.removeRedErrorBorder(f);
+            }
+        });
+
     }
 
 }

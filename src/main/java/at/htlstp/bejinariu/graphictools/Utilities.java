@@ -4,6 +4,12 @@ package at.htlstp.bejinariu.graphictools;
 
 //Imports 
 import java.util.HashSet;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
@@ -18,7 +24,20 @@ import javafx.scene.text.FontWeight;
  */
 public class Utilities {
 
-    public static HashSet<TextField> fehlerCount = new HashSet<>();
+    private static final ObservableSet<TextField> fehlerCount = FXCollections.observableSet(); 
+
+   
+
+    public static  ObservableSet<TextField> fehlerCountProperty() {
+        return fehlerCount;
+    }
+
+    
+    
+   
+   
+
+    
 
     //Statische Methoden - werden von unterschiedliche Klassen dieses Pakets verwendet 
     /**

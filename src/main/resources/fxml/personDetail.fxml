@@ -27,7 +27,6 @@
             <TextField fx:id="fld_telefonnr" layoutX="436.0" layoutY="68.0" prefHeight="25.0" prefWidth="280.0" />
             
             <TextField fx:id="fld_email" layoutX="438.0" layoutY="33.0" prefHeight="25.0" prefWidth="278.0" />
-            <Label layoutX="26.0" layoutY="551.0" />
             <Button fx:id="btn_speichern" layoutX="25.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionSpeichern" prefHeight="25.0" prefWidth="160.0" text="Speichern" AnchorPane.leftAnchor="20.0" />
             <GridPane hgap="10.0" layoutX="2.0" layoutY="127.0" prefHeight="555.0" prefWidth="751.0">
               <columnConstraints>
@@ -115,6 +114,7 @@
             <Button fx:id="btn_loesche" layoutX="213.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionLoeschen" prefWidth="160.0" text="Person löschen" AnchorPane.leftAnchor="213.0" AnchorPane.rightAnchor="409.0" />
             <Button fx:id="btn_report" layoutX="298.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionReportGenerate" prefWidth="160.0" text="Report generieren" AnchorPane.rightAnchor="20.0" />
             <Button fx:id="btn_neu" layoutX="416.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionNeuePerson" prefHeight="25.0" prefWidth="160.0" text="Neue Person" />
+            <Label fx:id="lbl_info" layoutX="21.0" layoutY="693.0" text="Info: " visible="false" />
          </children>
       </AnchorPane>
    </center>

@@ -182,7 +182,7 @@ public class Person implements Serializable {
     }
     
     public String toString(){
-        return vorname + " " + nachname; 
+        return  personId != null? vorname + " " + nachname: "Neue Person"; 
     }
 
 }
