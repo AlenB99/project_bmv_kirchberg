@@ -547,9 +547,9 @@ public class PersonDetailController implements Initializable {
     private void onActionSortPersonen(ActionEvent event) {
 
         if (rdb_aufsteigend.isSelected()) {
-            lstview_personen.setItems(people.sorted(nameComparator));
+            lstview_personen.setItems(lstview_personen.getItems().sorted(nameComparator));
         } else if (rdb_absteigend.isSelected()) {
-            lstview_personen.setItems(people.sorted((p1, p2) -> -nameComparator.compare(p1, p2)));
+            lstview_personen.setItems(lstview_personen.getItems().sorted((p1, p2) -> -nameComparator.compare(p1, p2)));
         }
         lstview_personen.refresh();
     }
