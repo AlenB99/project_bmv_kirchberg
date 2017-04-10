@@ -13,6 +13,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +37,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
@@ -59,6 +61,7 @@ public class PersonDetailController implements Initializable {
     private Button btn_speichern;
     private HibernateDataMananger instance;
     private Person aktPerson = null;
+    private boolean checkForChange = false;
     @FXML
     private ChoiceBox<Kleidungsstueck.Status> choise_hut;
     @FXML
@@ -68,14 +71,14 @@ public class PersonDetailController implements Initializable {
     private final static List<Kleidungsstueck.Status> MOEGLICHKEITEN = new LinkedList<>();
     private final static List<Kleidungsstueck.Groesse> GROESSEN = new LinkedList<>();
 
-    private final int HHHG_MINSIZE = 0; //Min Size für Hut Hose Hemd Gürtel
-    private final int HHHG_MAXSIZE = 100;//Max Size für Hut Hose Hemd Gürtel
+    private final static int HHHG_MINSIZE = 0; //Min Size für Hut Hose Hemd Gürtel
+    private final static int HHHG_MAXSIZE = 100;//Max Size für Hut Hose Hemd Gürtel
 
-    private final long TELE_MAXSIZE = 999999999;//Max Size für Hut Hose Hemd Gürtel
+    private final static long TELE_MAXSIZE = 999999999;//Max Size für Hut Hose Hemd Gürtel
 
-    private final double SCHUHE_MINSIZE = 0.0; //Min Size für Schuhe
-    private final double SCHUHE_MAXSIZE = 100.0;//Max Size für Schuhe
-
+    private final static double SCHUHE_MINSIZE = 0.0; //Min Size für Schuhe
+    private final static double SCHUHE_MAXSIZE = 100.0;//Max Size für Schuhe
+    private final static Comparator<Person> nameComparator; //Comparator fürs Sortieren nach dem Familiennamen
     private final LocalDate DATEMIN = LocalDate.of(1900, 1, 1);
 
     static {
@@ -86,6 +89,14 @@ public class PersonDetailController implements Initializable {
         GROESSEN.add(Kleidungsstueck.Groesse.L);
         GROESSEN.add(Kleidungsstueck.Groesse.XLL);
         GROESSEN.add(Kleidungsstueck.Groesse.XL);
+
+        nameComparator = (p1, p2) -> {
+            int diff = p1.getNachname().compareTo(p2.getNachname());
+            if (diff == 0) {
+                return p1.getVorname().compareTo(p2.getNachname());
+            }
+            return diff;
+        };
     }
     @FXML
     private ChoiceBox<Kleidungsstueck.Status> choise_hemd;
@@ -159,6 +170,11 @@ public class PersonDetailController implements Initializable {
     private Button btn_neu;
     @FXML
     private Label lbl_info;
+    @FXML
+    private RadioButton rdb_aufsteigend;
+    @FXML
+    private RadioButton rdb_absteigend;
+    private ToggleGroup sortieren;
 
     /**
      * Initializes the controller class.
@@ -177,9 +193,8 @@ public class PersonDetailController implements Initializable {
             choiseBoxen.add(choise_tracht);
             choiseBoxen.add(choise_guertel);
             choiseBoxen.add(choise_schuhe);
-            for (ChoiceBox<Kleidungsstueck.Status> ks : choiseBoxen) {
-                ks.setItems(FXCollections.observableArrayList(MOEGLICHKEITEN));
-            }
+            choiseBoxen.forEach((ks) -> ks.setItems(FXCollections.observableArrayList(MOEGLICHKEITEN)));
+
             choise_wjacke_groesse.setItems(FXCollections.observableArrayList(GROESSEN));
             instance = HibernateDataMananger.getINSTANCE();
             //Fehlerquellen werdne hier anerkannt 
@@ -188,11 +203,11 @@ public class PersonDetailController implements Initializable {
             textFieldToIntField(fld_hose, HHHG_MINSIZE, HHHG_MAXSIZE);//Nur INTs(0-100) werden erlaubt
             textFieldToIntField(fld_guertel, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
 
-            textFieldToTeleField(fld_telefonnr);
-            textFieldToEmailField(fld_email);
+            textFieldToTeleField(fld_telefonnr);           //Nur Zahlen werden erlaubt 
+            textFieldToEmailField(fld_email);               //Nur eine gängige Email wird zugelassen 
             textFieldToDoubleField(fld_schuhe, SCHUHE_MINSIZE, SCHUHE_MAXSIZE); //Nur Doubles(0.0-100.0) werden erlaubt
-            textFieldName(fld_vorname);
-            textFieldName(fld_nachname);
+            textFieldName(fld_vorname);                        //Nur Buchstaben 
+            textFieldName(fld_nachname);                       //Nur Buchstaben 
 
             //Alle Personen werden in die Liste geladen, Liste wird mit der ListView gekoppelt 
             people = FXCollections.observableArrayList((ArrayList<Person>) instance.loadAll());
@@ -200,15 +215,32 @@ public class PersonDetailController implements Initializable {
 
             //Listener für die Liste 
             lstview_personen.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
-
+               if(oldV != null){
+                   remeber(aktPerson);
+               }
                 if (newV == null) {
                     //Deselektieren verhindern 
                     lstview_personen.getSelectionModel().select(oldV);
                 } else {
                     //Details der Person werden in die Grafik geladen 
-                    setPersonDetails(newV);
+                    aktPerson = newV;
+                    setPersonDetails(aktPerson);
                 }
             });
+
+            //Aufzeigen con Fehlermeldungen in Echtzeit 
+            Utilities.fehlerCountProperty().addListener((Observable observable) -> {
+                if (Utilities.fehlerCountProperty().isEmpty()) {
+                    lbl_info.setText("Info: Alle Eingaben sind richting*");
+                    lbl_info.setVisible(true);
+                    lbl_info.setTextFill(Color.web("green"));
+                } else {
+                    lbl_info.setText("Info: " + Utilities.fehlerCountProperty().size() + " Textfelder beinhalten falsche Werte oder sind leer*");
+                    lbl_info.setVisible(true);
+                    lbl_info.setTextFill(Color.web("red"));
+                }
+            });
+
             //Wenn keine Personen in der Datenbank vorhanden sind    
             if (people.size() > 0) {
                 //Erstes Element selektieren(immer vorhanden)
@@ -217,20 +249,7 @@ public class PersonDetailController implements Initializable {
                 //Eine neue Person wird benötigt 
                 onActionNeuePerson(null);
             }
-            
-            Utilities.fehlerCountProperty().addListener((Observable observable) -> {
-                if(Utilities.fehlerCountProperty().isEmpty()){
-                    lbl_info.setText("Info: Alle Eingaben sind richting*");
-                    lbl_info.setVisible(true);
-                    lbl_info.setTextFill(Color.web("green"));
-                }else {
-                    lbl_info.setText("Info: " + Utilities.fehlerCountProperty().size() + " Textfelder beinhalten falsche Werte oder sind leer*");
-                    lbl_info.setVisible(true);
-                    lbl_info.setTextFill(Color.web("red"));
-                }
-            });
-             
-            
+            onActionSortPersonen(null);
 
         } catch (Exception e) {
             System.out.println(e.getMessage() + e.getClass());
@@ -240,7 +259,7 @@ public class PersonDetailController implements Initializable {
 
     public void setPersonDetails(Person p) {
         //Kontaktdaten 
-        aktPerson = p;
+
         fld_vorname.setText(p.getVorname());
         fld_nachname.setText(p.getNachname());
         fld_telefonnr.setText(p.getTelefonnr());
@@ -308,7 +327,11 @@ public class PersonDetailController implements Initializable {
 
     @FXML
     private void onActionSpeichern(ActionEvent event) {
-        ButtonType answer = at.htlstp.bejinariu.graphictools.Utilities.showJesNoDialog("Änderungen speichern", "Bestätigung");
+        //Elemente werden nur aus der observableList people gelöscht, niemals aus der 
+        //Liste die man durch listview_personen.getItems() bekommt. Grund: beim Sortieren und Filtern werden
+        //Wrapperlisten verwendet. Diese werden dann der ListView zugewiesen. Aus SortedLists und FilteredList
+        //kann weder geöscht noch eingefügt werden.
+        ButtonType answer = at.htlstp.bejinariu.graphictools.Utilities.showJesNoDialog("Sollten die Daten der aktuellen Person gespeichert werden?", "Bestätigung");
         if (ButtonType.YES.equals(answer) && Utilities.fehlerCountProperty().isEmpty()) {
             getPersonDetails(aktPerson);
             if (aktPerson.getPersonId() == null) {
@@ -324,7 +347,7 @@ public class PersonDetailController implements Initializable {
             }
             lstview_personen.refresh();
         } else if (ButtonType.YES.equals(answer) && !Utilities.fehlerCountProperty().isEmpty()) {   //Speichern nicht möglich 
-            Utilities.showMessage("Fehler beim Speicheren", "Speichern war nicht erfolgreich", "Es sind " + Utilities.fehlerCountProperty().size() + " Fehler aufgetreten, bitte überprüfen Sie die Felder auf Gültigkeit", Alert.AlertType.ERROR, false);
+            Utilities.showMessage("Fehler", "Speichern war nicht erfolgreich", "Es sind " + Utilities.fehlerCountProperty().size() + " Fehler aufgetreten, bitte überprüfen Sie die Felder auf Gültigkeit", Alert.AlertType.ERROR, false);
         }
 
     }
@@ -422,7 +445,7 @@ public class PersonDetailController implements Initializable {
     }
 
     private void textFieldToEmailField(TextField txtField) {
-
+        txtField.setText("0");
         txtField.textProperty().addListener((observable, oldValue, newValue) -> {
             String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
             java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
@@ -490,6 +513,10 @@ public class PersonDetailController implements Initializable {
 
     @FXML
     private void onActionLoeschen(ActionEvent event) {
+        //Elemente werden nur aus der observableList people gelöscht, niemals aus der 
+        //Liste die man durch listview_personen.getItems() bekommt. Grund: beim Sortieren und Filtern werden
+        //Wrapperlisten verwendet. Diese werden dann der ListView zugewiesen. Aus SortedLists und FilteredList
+        //kann weder geöscht noch eingefügt werden.
         ButtonType response = Utilities.showJesNoDialog("Person wirklich unwiderruflich löschen?", "Bestätigung gebraucht");
         if (response.equals(ButtonType.YES)) {
             int index = people.indexOf(aktPerson);  //Index der Person in der Liste 
@@ -518,6 +545,13 @@ public class PersonDetailController implements Initializable {
 
     @FXML
     private void onActionSortPersonen(ActionEvent event) {
+
+        if (rdb_aufsteigend.isSelected()) {
+            lstview_personen.setItems(people.sorted(nameComparator));
+        } else if (rdb_absteigend.isSelected()) {
+            lstview_personen.setItems(people.sorted((p1, p2) -> -nameComparator.compare(p1, p2)));
+        }
+        lstview_personen.refresh();
     }
 
     @FXML
@@ -526,6 +560,7 @@ public class PersonDetailController implements Initializable {
     }
 
     public void newPerson() {
+        remeber(aktPerson); 
         aktPerson = new Person();
         fld_nachname.setText("");
         fld_vorname.setText("");
@@ -562,7 +597,7 @@ public class PersonDetailController implements Initializable {
     }
 
     private void textFieldName(TextField f) {
-
+        f.setText("0");
         f.textProperty().addListener((obs, olD, newV) -> {
             if (newV.isEmpty()) {
                 Utilities.setRedErrorBorder(f);
@@ -575,4 +610,13 @@ public class PersonDetailController implements Initializable {
 
     }
 
+    private void remeber(Person aktPerson) {
+        Person person = new Person();
+        getPersonDetails(person);
+        person.setPersonId(aktPerson.getPersonId());
+
+        if (!person.deepEquals(aktPerson)) {
+            onActionSpeichern(null);
+        }
+    }
 }

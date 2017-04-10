@@ -171,7 +171,6 @@ public class Person implements Serializable {
     }
 
     //Kontrollausgaben 
-   
     public String toStringAdvanced() {
         String result = "Person{" + "personId=" + personId + ", vorname=" + vorname + ", nachname=" + nachname + ", telefonnr=" + telefonnr + ", email=" + email + ", anmerkung=" + anmerkung + ", isMarkentender=" + isMarkentender + '}';
         result += result + "\n";
@@ -180,9 +179,68 @@ public class Person implements Serializable {
         }
         return result;
     }
-    
-    public String toString(){
-        return  personId != null? vorname + " " + nachname: "Neue Person"; 
+
+    public String toString() {
+        return personId != null ? nachname + " " + vorname : "Neue Person";
+    }
+
+    public boolean deepEquals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Person other = (Person) obj;
+        if (!Objects.equals(this.isMarkentender, other.isMarkentender)) {
+            return false;
+        }
+        if (!Objects.equals(this.anmerkung, other.anmerkung)) {
+            return false;
+        }
+        if (!Objects.equals(this.email, other.email)) {
+            return false;
+        }
+        if (!Objects.equals(this.nachname, other.nachname)) {
+            return false;
+        }
+        if (!Objects.equals(this.vorname, other.vorname)) {
+            return false;
+        }
+        if (!Objects.equals(this.personId, other.personId)) {
+            return false;
+        }
+        if (!Objects.equals(this.telefonnr, other.telefonnr)) {
+            return false;
+        }
+
+        Kleidungsstueck kleidungsstueckToCompare, kleidungsstueck;
+        for (int i = 0; i < this.kleidungsstuecke.size(); i++) {
+            kleidungsstueck = this.kleidungsstuecke.get(i);
+            kleidungsstueckToCompare = other.getKleidungsstueckByBezeichnung(kleidungsstueck.getBezeichnung());
+            if (!kleidungsstueck.deepEquals(kleidungsstueckToCompare)) {
+                System.out.println("Dropped" + kleidungsstueck);
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    private Kleidungsstueck getKleidungsstueckByBezeichnung(String get) {
+        for (Kleidungsstueck p : this.kleidungsstuecke) {
+            if (p.getBezeichnung().equals(get)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public void setPersonId(Integer personId) {
+        this.personId = personId;
     }
 
 }

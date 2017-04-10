@@ -9,6 +9,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -122,9 +123,15 @@
       <ListView fx:id="lstview_personen" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: gray;" BorderPane.alignment="CENTER" />
    </left>
    <right>
-      <AnchorPane prefHeight="787.0" prefWidth="188.0" style="-fx-background-color: white; -fx-border-color: gray;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: gray;" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btn_sort" layoutX="14.0" layoutY="29.0" mnemonicParsing="false" onAction="#onActionSortPersonen" prefWidth="160.0" text="Sortieren" />
+            <Label layoutX="23.0" layoutY="29.0" text="Sortieren:" />
+            <RadioButton fx:id="rdb_aufsteigend" layoutX="23.0" layoutY="64.0" mnemonicParsing="false" onAction="#onActionSortPersonen" selected="true" text="Nach Familiennamen A - Z">
+               <toggleGroup>
+                  <ToggleGroup fx:id="sortieren" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="rdb_absteigend" layoutX="23.0" layoutY="99.0" mnemonicParsing="false" onAction="#onActionSortPersonen" text="Nach Familiennamen Z - A" toggleGroup="$sortieren" />
          </children>
       </AnchorPane>
    </right>

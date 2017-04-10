@@ -7,6 +7,7 @@ package at.htlstp.bejinariu.models;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -94,6 +95,7 @@ public class Kleidungsstueck implements Serializable {
         this.kleidungsgroesse = kleidungsgroesse;
     }
 
+
     //Enums 
     public static enum Status {
         Beim_Verein, Beim_Mitglied, Nicht_im_Besitz;
@@ -108,4 +110,68 @@ public class Kleidungsstueck implements Serializable {
     public static enum Groesse {
         XLL, L, XL;         //Zu verfolständigen 
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 41 * hash + Objects.hashCode(this.mitglied);
+        hash = 41 * hash + Objects.hashCode(this.bezeichnung);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Kleidungsstueck other = (Kleidungsstueck) obj;
+        if (!Objects.equals(this.bezeichnung, other.bezeichnung)) {
+            return false;
+        }
+        if (!Objects.equals(this.mitglied, other.mitglied)) {
+            return false;
+        }
+        return true;
+    }
+    
+       public boolean deepEquals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+          
+        final Kleidungsstueck other = (Kleidungsstueck) obj;
+        if (!Objects.equals(this.kleidungsgroesse, other.kleidungsgroesse)) {
+            return false;
+        }
+        if (!Objects.equals(this.mitglied, other.mitglied)) {
+            return false;
+        }
+         if (!Objects.equals(this.bezeichnung, other.bezeichnung)) {
+            return false;
+        }
+          if (!Objects.equals(this.aenderungsdatum, other.aenderungsdatum)) {
+            return false;
+        }
+           if (!Objects.equals(this.status, other.status)) {
+            return false;
+        }
+       
+        return true;
+    }
+    
+    
+   
+
 }
