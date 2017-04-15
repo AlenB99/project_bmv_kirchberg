@@ -22,6 +22,7 @@ import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -159,8 +160,6 @@ public class PersonDetailController implements Initializable {
     private TextArea area_zk;
     @FXML
     private Button btn_loesche;
-    @FXML
-    private Button btn_sort;
     private ObservableList<Person> people;
     @FXML
     private RadioButton rdb_markentender;
@@ -174,7 +173,14 @@ public class PersonDetailController implements Initializable {
     private RadioButton rdb_aufsteigend;
     @FXML
     private RadioButton rdb_absteigend;
+    @FXML
     private ToggleGroup sortieren;
+    @FXML
+    private TextField fld_FilterName;
+    @FXML
+    private Button btn_resetFilterName;
+    @FXML
+    private Button btn_FilterName1;
 
     /**
      * Initializes the controller class.
@@ -215,9 +221,9 @@ public class PersonDetailController implements Initializable {
 
             //Listener für die Liste 
             lstview_personen.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
-               if(oldV != null){
-                   remeber(aktPerson);
-               }
+                if (oldV != null) {
+                    remeber(aktPerson);
+                }
                 if (newV == null) {
                     //Deselektieren verhindern 
                     lstview_personen.getSelectionModel().select(oldV);
@@ -560,7 +566,7 @@ public class PersonDetailController implements Initializable {
     }
 
     public void newPerson() {
-        remeber(aktPerson); 
+        remeber(aktPerson);
         aktPerson = new Person();
         fld_nachname.setText("");
         fld_vorname.setText("");
@@ -619,4 +625,26 @@ public class PersonDetailController implements Initializable {
             onActionSpeichern(null);
         }
     }
+
+    @FXML
+    private void onActionFilterName(ActionEvent event) {
+
+        FilteredList<Person> filteredData = new FilteredList<>(people, s -> true);
+
+        String filter = fld_FilterName.getText();
+        if (filter == null || filter.length() == 0) {
+            filteredData.setPredicate(s -> true);
+        } else {
+            filteredData.setPredicate(s -> s.toString().toLowerCase().contains(filter.toLowerCase()));
+        }
+        onActionSortPersonen(null);
+        lstview_personen.setItems(filteredData);
+    }
+
+    @FXML
+    private void onActionresetFilterName(ActionEvent event) {
+        onActionSortPersonen(null);
+        lstview_personen.setItems(people);
+    }
+
 }
