@@ -39,6 +39,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
@@ -49,7 +51,8 @@ import javafx.util.Callback;
  * @author Dru
  */
 public class PersonDetailController implements Initializable {
-
+    @FXML
+    private AnchorPane anchor_main; 
     @FXML
     private TextField fld_vorname;
     @FXML
@@ -177,10 +180,6 @@ public class PersonDetailController implements Initializable {
     private ToggleGroup sortieren;
     @FXML
     private TextField fld_FilterName;
-    @FXML
-    private Button btn_resetFilterName;
-    @FXML
-    private Button btn_FilterName1;
 
     /**
      * Initializes the controller class.
@@ -525,18 +524,18 @@ public class PersonDetailController implements Initializable {
         //kann weder geöscht noch eingefügt werden.
         ButtonType response = Utilities.showJesNoDialog("Person wirklich unwiderruflich löschen?", "Bestätigung gebraucht");
         if (response.equals(ButtonType.YES)) {
-            int index = people.indexOf(aktPerson);  //Index der Person in der Liste 
+            int index = lstview_personen.getItems().indexOf(aktPerson);  //Index der Person in der Liste 
             if (aktPerson.getPersonId() != null) {
-                instance.deletePerson(aktPerson);   //Person aus der Datenabk löschen, wenn nötig
+                instance.deletePerson(aktPerson);   //Person aus der Datenbank löschen, wenn nötig
             }
             //Person wird von der Liste gestrichen 
             people.remove(aktPerson);
             //Welches Element soll nun selektiert werden: 
-            if (people.isEmpty()) {
-                newPerson();    //Keine Elemente vorhanden, neue Person 
-            } else if (index == people.size()) {    //Letztes Element wurde gelöscht, 
+            if (lstview_personen.getItems().isEmpty()) {
+                newPerson();    //Keine Elemente vorhanden
+            } else if (index == lstview_personen.getItems().size()) {    //Letztes Element wurde gelöscht, 
                 lstview_personen.getSelectionModel().select(index - 1);
-            } else if (index == 0 && people.size() >= 1) {  //Erstes Element wurde gelöscht, das zweite Element wird selektiert
+            } else if (index == 0 && lstview_personen.getItems().size() >= 1) {  //Erstes Element wurde gelöscht, das zweite Element wird selektiert
                 lstview_personen.getSelectionModel().select(1);
             } else {        //Element befindet sich mittendrin, das nächste Element wird selektiert 
                 lstview_personen.getSelectionModel().select(index);
@@ -626,9 +625,9 @@ public class PersonDetailController implements Initializable {
         }
     }
 
-    @FXML
-    private void onActionFilterName(ActionEvent event) {
 
+    @FXML
+    private void onActionFiltern(KeyEvent event) {
         FilteredList<Person> filteredData = new FilteredList<>(people, s -> true);
 
         String filter = fld_FilterName.getText();
@@ -637,14 +636,10 @@ public class PersonDetailController implements Initializable {
         } else {
             filteredData.setPredicate(s -> s.toString().toLowerCase().contains(filter.toLowerCase()));
         }
-        onActionSortPersonen(null);
+       
+             
         lstview_personen.setItems(filteredData);
-    }
-
-    @FXML
-    private void onActionresetFilterName(ActionEvent event) {
-        onActionSortPersonen(null);
-        lstview_personen.setItems(people);
+        onActionSortPersonen(null); 
     }
 
 }
