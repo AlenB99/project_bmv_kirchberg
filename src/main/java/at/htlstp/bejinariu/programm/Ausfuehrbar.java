@@ -13,8 +13,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import logindata.LoginDataHandler;
 
 /**
@@ -22,6 +24,14 @@ import logindata.LoginDataHandler;
  * @author Niko
  */
 public class Ausfuehrbar extends Application {
+
+    private static Stage stage;
+
+    public static Stage getScene() {
+        return stage;
+    }
+    
+    
 
     @Override
     public void start(Stage primaryStage) {
@@ -59,15 +69,16 @@ public class Ausfuehrbar extends Application {
             //Start des richtigen Programmsteils
             //-----------------------------------------------------------------------------------
             //switch (loginFXApplication.getUser()) {
-         
+            stage = primaryStage;
             FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/personDetail.fxml"));
-            Parent root =(BorderPane) loader.load(); 
+            Parent root = (BorderPane) loader.load();
             primaryStage.setScene(new Scene(root));
             PersonDetailController controller = loader.getController();
             primaryStage.setOnCloseRequest(e -> controller.close());
+            primaryStage.getIcons().add(new Image(this.getClass().getResource("/images/Logo.png").toString() ) ); 
+            primaryStage.setTitle("Trachtenverwaltungsprogramm v1.0");
             new Intro_Slide_FX(1000, primaryStage, Intro_Slide_FX.Position.TOP).slideAndShowStage();
-           
-           
+            stage = primaryStage;
 
         } catch (Exception e) {
             Utilities.showMessage("Fehler", "Problem beim Starten", "Das Laden der Applikation schlug fehl. Wenden Sie sich an den Hersteller", Alert.AlertType.ERROR, false);
@@ -84,6 +95,7 @@ public class Ausfuehrbar extends Application {
     }
 
     private void closeStage(LoginDataHandler postgreConnection) {
+      
         if ((postgreConnection != null)) {
             if (postgreConnection.isConnected()) {
                 try {
@@ -95,6 +107,10 @@ public class Ausfuehrbar extends Application {
                 }
             }
         }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
 }

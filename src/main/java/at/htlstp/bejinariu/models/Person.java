@@ -181,7 +181,7 @@ public class Person implements Serializable {
     }
 
     public String toString() {
-        return personId != null ? nachname + " " + vorname : "Neue Person";
+        return  nachname + " " + vorname; 
     }
 
     public boolean deepEquals(Object obj) {
@@ -242,5 +242,7 @@ public class Person implements Serializable {
     public void setPersonId(Integer personId) {
         this.personId = personId;
     }
+    
+    
 
 }

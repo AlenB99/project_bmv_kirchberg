@@ -29,7 +29,7 @@
             
             <TextField fx:id="fld_email" layoutX="438.0" layoutY="33.0" prefHeight="25.0" prefWidth="278.0" />
             <Button fx:id="btn_speichern" layoutX="25.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionSpeichern" prefHeight="25.0" prefWidth="160.0" text="Speichern" AnchorPane.leftAnchor="20.0" />
-            <GridPane hgap="10.0" layoutX="2.0" layoutY="127.0" prefHeight="555.0" prefWidth="751.0">
+            <GridPane hgap="10.0" layoutX="2.0" layoutY="138.0" prefHeight="555.0" prefWidth="751.0">
               <columnConstraints>
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="185.0" minWidth="10.0" prefWidth="119.0" />
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="291.0" minWidth="10.0" prefWidth="110.0" />
@@ -112,9 +112,9 @@
                </padding>
             </GridPane>
             <Label layoutX="49.0" layoutY="42.0" text="Vorname:" />
-            <Button fx:id="btn_loesche" layoutX="213.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionLoeschen" prefWidth="160.0" text="Person löschen" AnchorPane.leftAnchor="213.0" AnchorPane.rightAnchor="409.0" />
-            <Button fx:id="btn_report" layoutX="298.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionReportGenerate" prefWidth="160.0" text="Report generieren" AnchorPane.rightAnchor="20.0" />
-            <Button fx:id="btn_neu" layoutX="416.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionNeuePerson" prefHeight="25.0" prefWidth="160.0" text="Neue Person" />
+            <Button fx:id="btn_loesche" layoutX="213.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionLoeschen" prefWidth="160.0" text="Mitglied löschen" AnchorPane.leftAnchor="213.0" AnchorPane.rightAnchor="409.0" />
+            <Button fx:id="btn_report" layoutX="298.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionSingleReportGenerate" prefWidth="160.0" text="Report generieren" AnchorPane.rightAnchor="20.0" />
+            <Button fx:id="btn_neu" layoutX="416.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionNeuePerson" prefHeight="25.0" prefWidth="160.0" text="Neues Mitglied" />
             <Label fx:id="lbl_info" layoutX="21.0" layoutY="693.0" text="Info: " visible="false" />
          </children>
       </AnchorPane>
@@ -132,8 +132,9 @@
                </toggleGroup>
             </RadioButton>
             <RadioButton fx:id="rdb_absteigend" layoutX="23.0" layoutY="99.0" mnemonicParsing="false" onAction="#onActionSortPersonen" text="Nach Familiennamen Z - A" toggleGroup="$sortieren" />
-            <TextField fx:id="fld_FilterName" layoutX="26.0" layoutY="737.0" onKeyPressed="#onActionFiltern" />
-            <Label layoutX="35.0" layoutY="707.0" text="Filtern:" />
+            <TextField fx:id="fld_FilterName" layoutX="26.0" layoutY="661.0" onKeyPressed="#onActionFiltern" />
+            <Label layoutX="31.0" layoutY="629.0" text="Suche:" />
+            <Button layoutX="31.0" layoutY="728.0" maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" onAction="#onActionBulkyReport" text="Verein-Report generieren" />
          </children>
       </AnchorPane>
    </right>

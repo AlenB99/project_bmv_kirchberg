@@ -9,17 +9,22 @@ import at.htlstp.bejinariu.datamanager.HibernateDataMananger;
 import at.htlstp.bejinariu.graphictools.Utilities;
 import at.htlstp.bejinariu.models.Kleidungsstueck;
 import at.htlstp.bejinariu.models.Person;
+import at.htlstp.bejinariu.reports.ReportGenerator;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -51,8 +56,9 @@ import javafx.util.Callback;
  * @author Dru
  */
 public class PersonDetailController implements Initializable {
+
     @FXML
-    private AnchorPane anchor_main; 
+    private AnchorPane anchor_main;
     @FXML
     private TextField fld_vorname;
     @FXML
@@ -78,12 +84,11 @@ public class PersonDetailController implements Initializable {
     private final static int HHHG_MINSIZE = 0; //Min Size für Hut Hose Hemd Gürtel
     private final static int HHHG_MAXSIZE = 100;//Max Size für Hut Hose Hemd Gürtel
 
-    private final static long TELE_MAXSIZE = 999999999;//Max Size für Hut Hose Hemd Gürtel
-
     private final static double SCHUHE_MINSIZE = 0.0; //Min Size für Schuhe
     private final static double SCHUHE_MAXSIZE = 100.0;//Max Size für Schuhe
     private final static Comparator<Person> nameComparator; //Comparator fürs Sortieren nach dem Familiennamen
     private final LocalDate DATEMIN = LocalDate.of(1900, 1, 1);
+    private static final ChangeListener<TextField> changerInt;
 
     static {
         MOEGLICHKEITEN.add(Kleidungsstueck.Status.Beim_Verein);
@@ -100,8 +105,11 @@ public class PersonDetailController implements Initializable {
                 return p1.getVorname().compareTo(p2.getNachname());
             }
             return diff;
+
         };
+        changerInt = null;
     }
+
     @FXML
     private ChoiceBox<Kleidungsstueck.Status> choise_hemd;
     @FXML
@@ -156,7 +164,7 @@ public class PersonDetailController implements Initializable {
     private DatePicker dpick_guertel;
     @FXML
     private DatePicker dpick_schuhe;
-    private final List<ChoiceBox<Kleidungsstueck.Status>> choiseBoxen = new ArrayList<>();
+    private final List<DatePicker> datePickers = new ArrayList<>();
     @FXML
     private ListView<Person> lstview_personen;
     @FXML
@@ -180,27 +188,31 @@ public class PersonDetailController implements Initializable {
     private ToggleGroup sortieren;
     @FXML
     private TextField fld_FilterName;
+    private Map<Node, ChoiceBox<Kleidungsstueck.Status>> infos = new HashMap<>();
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         try {
             //Voreinstellungen
-            choiseBoxen.add(choise_hut);
-            choiseBoxen.add(choise_buendel);
-            choiseBoxen.add(choise_dirndl);
-            choiseBoxen.add(choise_gillette);
-            choiseBoxen.add(choise_hemd);
-            choiseBoxen.add(choise_hose);
-            choiseBoxen.add(choise_wjacke);
-            choiseBoxen.add(choise_tracht);
-            choiseBoxen.add(choise_guertel);
-            choiseBoxen.add(choise_schuhe);
-            choiseBoxen.forEach((ks) -> ks.setItems(FXCollections.observableArrayList(MOEGLICHKEITEN)));
+            infos.put(fld_buendel, choise_buendel);
+            infos.put(fld_dirndl, choise_dirndl);
+            infos.put(fld_gillette, choise_gillette);
+            infos.put(fld_guertel, choise_guertel);
+            infos.put(fld_hemd, choise_hemd);
+            infos.put(fld_hose, choise_hose);
+            infos.put(fld_hut, choise_hut);
+            infos.put(fld_schuhe, choise_schuhe);
+            infos.put(fld_tracht, choise_tracht);
+            infos.put(choise_wjacke_groesse, choise_wjacke);
 
+            datePickers.addAll(Arrays.asList(dpick_buendel, dpick_dirndl, dpick_gillette, dpick_guertel, dpick_hemd, dpick_hose, dpick_hut, dpick_schuhe, dpick_tracht, dpick_wjacke));
+            infos.values().forEach((ks) -> ks.setItems(FXCollections.observableArrayList(MOEGLICHKEITEN)));
             choise_wjacke_groesse.setItems(FXCollections.observableArrayList(GROESSEN));
+
             instance = HibernateDataMananger.getINSTANCE();
             //Fehlerquellen werdne hier anerkannt 
             textFieldToIntField(fld_hut, HHHG_MINSIZE, HHHG_MAXSIZE); //Nur INTs(0-100) werden erlaubt
@@ -214,14 +226,50 @@ public class PersonDetailController implements Initializable {
             textFieldName(fld_vorname);                        //Nur Buchstaben 
             textFieldName(fld_nachname);                       //Nur Buchstaben 
 
+            //Nur Daten ab 1900
+            datePickers.stream().forEach(d -> dPickInit(d, DATEMIN));
+
+            //BusinessRule: Mitarbeiter besitzt kleidungsstuecke nicht 
+            for (Node key : infos.keySet()) {
+                infos.get(key).valueProperty().addListener((o, oldV, newV) -> {
+
+                    if (newV.equals(Kleidungsstueck.Status.Nicht_im_Besitz)) {
+                        key.disableProperty().set(true);
+                        if (key instanceof TextField) {
+                            if (((TextField) key).isEditable()) { //Alle Int und DOuble Felder 
+                                ((TextField) key).setText("");
+                                Utilities.removeRedErrorBorder((TextField) key);
+                            }
+                        } else {
+                            ((ChoiceBox<Kleidungsstueck.Groesse>) key).getSelectionModel().select(null);
+                        }
+                    } else if (oldV != null && oldV.equals(Kleidungsstueck.Status.Nicht_im_Besitz)) {
+                        key.disableProperty().set(false);
+                        if (key instanceof TextField) {
+                            if (((TextField) key).isEditable()) {
+                                ((TextField) key).setText("0");
+                            }
+                        } else {
+                            ((ChoiceBox<Kleidungsstueck.Groesse>) key).getSelectionModel().selectFirst();
+                        }
+                        key.requestFocus();
+                    }
+                });
+            }
+
             //Alle Personen werden in die Liste geladen, Liste wird mit der ListView gekoppelt 
             people = FXCollections.observableArrayList((ArrayList<Person>) instance.loadAll());
+
+            //  people = instance.loadTestData(); 
+            if (people == null) {
+                people = FXCollections.observableArrayList();
+            }
             lstview_personen.setItems(people);
 
             //Listener für die Liste 
             lstview_personen.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
-                if (oldV != null) {
-                    remeber(aktPerson);
+                if (oldV != null && aktPerson != null) {
+                    remember(aktPerson);
                 }
                 if (newV == null) {
                     //Deselektieren verhindern 
@@ -233,10 +281,10 @@ public class PersonDetailController implements Initializable {
                 }
             });
 
-            //Aufzeigen con Fehlermeldungen in Echtzeit 
+            //Aufzeigen von Fehlermeldungen in Echtzeit 
             Utilities.fehlerCountProperty().addListener((Observable observable) -> {
                 if (Utilities.fehlerCountProperty().isEmpty()) {
-                    lbl_info.setText("Info: Alle Eingaben sind richting*");
+                    lbl_info.setText("Info: Alle Eingaben sind richtig*");
                     lbl_info.setVisible(true);
                     lbl_info.setTextFill(Color.web("green"));
                 } else {
@@ -250,11 +298,11 @@ public class PersonDetailController implements Initializable {
             if (people.size() > 0) {
                 //Erstes Element selektieren(immer vorhanden)
                 lstview_personen.getSelectionModel().selectFirst();
+                onActionSortPersonen(null);
             } else {
                 //Eine neue Person wird benötigt 
                 onActionNeuePerson(null);
             }
-            onActionSortPersonen(null);
 
         } catch (Exception e) {
             System.out.println(e.getMessage() + e.getClass());
@@ -352,7 +400,7 @@ public class PersonDetailController implements Initializable {
             }
             lstview_personen.refresh();
         } else if (ButtonType.YES.equals(answer) && !Utilities.fehlerCountProperty().isEmpty()) {   //Speichern nicht möglich 
-            Utilities.showMessage("Fehler", "Speichern war nicht erfolgreich", "Es sind " + Utilities.fehlerCountProperty().size() + " Fehler aufgetreten, bitte überprüfen Sie die Felder auf Gültigkeit", Alert.AlertType.ERROR, false);
+            Utilities.showMessage("Fehler", "Speichern war nicht erfolgreich", "Es sind " + Utilities.fehlerCountProperty().size() + " Fehler aufgetreten, bitte überprüfen Sie die Felder auf Gültigkeit und speichern Sie danach erneut", Alert.AlertType.ERROR, false);
         }
 
     }
@@ -372,20 +420,31 @@ public class PersonDetailController implements Initializable {
                 k -> exist.add(k.getBezeichnung())
         );
 
-        speichereKleidungsstueckeVonGrafik(person, "Hut", choise_hut, dpick_hut, fld_hut, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Hemd", choise_hemd, dpick_hemd, fld_hemd, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Hose", choise_hose, dpick_hose, fld_hose, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Winterjacke", choise_wjacke, dpick_wjacke, choise_wjacke_groesse, ChoiceBox.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Trachtenjanker", choise_tracht, dpick_tracht, fld_tracht, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Gillette", choise_gillette, dpick_gillette, fld_gillette, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Dirndl", choise_dirndl, dpick_dirndl, fld_dirndl, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Gürtel", choise_guertel, dpick_guertel, fld_guertel, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Bündel", choise_buendel, dpick_buendel, fld_buendel, TextField.class, exist);
-        speichereKleidungsstueckeVonGrafik(person, "Schuhe", choise_schuhe, dpick_schuhe, fld_schuhe, TextField.class, exist);
+        speichereKleidungsstueckeVonGrafik(person, "Hut", choise_hut, dpick_hut, fld_hut, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Hemd", choise_hemd, dpick_hemd, fld_hemd, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Hose", choise_hose, dpick_hose, fld_hose, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Winterjacke", choise_wjacke, dpick_wjacke, choise_wjacke_groesse, ChoiceBox.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Trachtenjanker", choise_tracht, dpick_tracht, fld_tracht, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Gillette", choise_gillette, dpick_gillette, fld_gillette, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Dirndl", choise_dirndl, dpick_dirndl, fld_dirndl, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Gürtel", choise_guertel, dpick_guertel, fld_guertel, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Bündel", choise_buendel, dpick_buendel, fld_buendel, TextField.class,
+                exist);
+        speichereKleidungsstueckeVonGrafik(person, "Schuhe", choise_schuhe, dpick_schuhe, fld_schuhe, TextField.class,
+                exist);
 
     }
 
     public void close() {
+        remember(aktPerson);   //Falls die Aktuelel Person verändert 
         try {
             instance.close();
             System.out.println("HibernateJPAUtil geschlossen!");
@@ -408,11 +467,14 @@ public class PersonDetailController implements Initializable {
         ks.setStatus(status.getValue());
         ks.setAenderungsdatum(Date.from(zeitpunkt.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-        if (groesseNodeClass.equals(TextField.class)) {
+        if (groesseNodeClass.equals(TextField.class
+        )) {
             ks.setKleidungsgroesse(((TextField) groesse).getText());
 
-        } else if (groesseNodeClass.equals(ChoiceBox.class)) {
-            ks.setKleidungsgroesse(((ChoiceBox<Kleidungsstueck.Groesse>) groesse).getValue().toString());
+        } else if (groesseNodeClass.equals(ChoiceBox.class
+        )) {
+            Kleidungsstueck.Groesse value = ((ChoiceBox<Kleidungsstueck.Groesse>) groesse).getValue();
+            ks.setKleidungsgroesse(value == null ? "" : value.toString());
         }
 
     }
@@ -422,9 +484,12 @@ public class PersonDetailController implements Initializable {
         choise.setValue(ks.getStatus());
         dpick.setValue(ks.getAenderungsdatum().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
-        if (groesseNodeClass.equals(TextField.class)) {
+        if (groesseNodeClass.equals(TextField.class
+        )) {
             ((TextField) node).setText(ks.getKleidungsgroesse());
-        } else if (groesseNodeClass.equals(ChoiceBox.class)) {
+
+        } else if (groesseNodeClass.equals(ChoiceBox.class
+        )) {
             ((ChoiceBox<Kleidungsstueck.Groesse>) node).setValue(Kleidungsstueck.Groesse.valueOf(ks.getKleidungsgroesse()));
         }
     }
@@ -498,14 +563,11 @@ public class PersonDetailController implements Initializable {
     }
 
     private void dPickInit(DatePicker dpDate, LocalDate min) {
-        dpDate.setValue(LocalDate.now());
         Callback<DatePicker, DateCell> dayCellFactory = dp -> new DateCell() {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
-
                 if (item.isBefore(min)) {
-                    setStyle("-fx-background-color: #ffc0cb;");
                     Platform.runLater(() -> setDisable(true));
                     dpDate.setValue(min);
                 }
@@ -522,30 +584,35 @@ public class PersonDetailController implements Initializable {
         //Liste die man durch listview_personen.getItems() bekommt. Grund: beim Sortieren und Filtern werden
         //Wrapperlisten verwendet. Diese werden dann der ListView zugewiesen. Aus SortedLists und FilteredList
         //kann weder geöscht noch eingefügt werden.
-        ButtonType response = Utilities.showJesNoDialog("Person wirklich unwiderruflich löschen?", "Bestätigung gebraucht");
+        ButtonType response = Utilities.showJesNoDialog("Person wirklich unwiderruflich löschen?", "Bestätigung benötigt");
+        Person loesche = aktPerson;
         if (response.equals(ButtonType.YES)) {
             int index = lstview_personen.getItems().indexOf(aktPerson);  //Index der Person in der Liste 
             if (aktPerson.getPersonId() != null) {
                 instance.deletePerson(aktPerson);   //Person aus der Datenbank löschen, wenn nötig
             }
-            //Person wird von der Liste gestrichen 
-            people.remove(aktPerson);
-            //Welches Element soll nun selektiert werden: 
-            if (lstview_personen.getItems().isEmpty()) {
-                newPerson();    //Keine Elemente vorhanden
-            } else if (index == lstview_personen.getItems().size()) {    //Letztes Element wurde gelöscht, 
-                lstview_personen.getSelectionModel().select(index - 1);
-            } else if (index == 0 && lstview_personen.getItems().size() >= 1) {  //Erstes Element wurde gelöscht, das zweite Element wird selektiert
-                lstview_personen.getSelectionModel().select(1);
-            } else {        //Element befindet sich mittendrin, das nächste Element wird selektiert 
-                lstview_personen.getSelectionModel().select(index);
+            if (people.contains(aktPerson)) {
+                //Person wird von der Liste gestrichen 
+                aktPerson = null;
+                people.remove(loesche);
             }
+
+            if (people.isEmpty()) {
+                newPerson();    //Keine Elemente vorhanden
+            }
+
+            if (lstview_personen.getItems().isEmpty()) {
+                anchor_main.setDisable(true);
+            }
+
         }
 
     }
 
     @FXML
-    private void onActionReportGenerate(ActionEvent event) {
+    private void onActionSingleReportGenerate(ActionEvent event) {
+        remember(aktPerson);    //Änderungen bei Bedarf vorher speichern 
+        ReportGenerator.newReport(aktPerson);
     }
 
     @FXML
@@ -565,7 +632,8 @@ public class PersonDetailController implements Initializable {
     }
 
     public void newPerson() {
-        remeber(aktPerson);
+        System.out.println("Aufgerufen");
+        remember(aktPerson);
         aktPerson = new Person();
         fld_nachname.setText("");
         fld_vorname.setText("");
@@ -577,26 +645,8 @@ public class PersonDetailController implements Initializable {
         fld_guertel.setText("");
         fld_schuhe.setText("");
         choise_wjacke_groesse.getSelectionModel().selectFirst();
-        dPickInit(dpick_wjacke, DATEMIN);
-        dPickInit(dpick_dirndl, DATEMIN);
-        dPickInit(dpick_guertel, DATEMIN);
-        dPickInit(dpick_gillette, DATEMIN);
-        dPickInit(dpick_buendel, DATEMIN);
-        dPickInit(dpick_hemd, DATEMIN);
-        dPickInit(dpick_hut, DATEMIN);
-        dPickInit(dpick_hose, DATEMIN);
-        dPickInit(dpick_schuhe, DATEMIN);
-        dPickInit(dpick_tracht, DATEMIN);
-        choise_wjacke.setValue(Kleidungsstueck.Status.Beim_Verein);
-        choise_dirndl.setValue(Kleidungsstueck.Status.Beim_Verein);
-        choise_guertel.setValue(Kleidungsstueck.Status.Beim_Verein);
-        choise_gillette.setValue(Kleidungsstueck.Status.Beim_Verein);
-        choise_buendel.setValue(Kleidungsstueck.Status.Beim_Verein);
-        choise_hemd.setValue(Kleidungsstueck.Status.Beim_Verein);
-        choise_hut.setValue(Kleidungsstueck.Status.Beim_Verein);
-        choise_hose.setValue(Kleidungsstueck.Status.Beim_Verein);
-        choise_schuhe.setValue(Kleidungsstueck.Status.Beim_Verein);
-        choise_tracht.setValue(Kleidungsstueck.Status.Beim_Verein);
+        datePickers.stream().forEach(dp -> dp.setValue(LocalDate.now()));
+        infos.values().stream().forEach(ch -> ch.setValue(Kleidungsstueck.Status.Beim_Verein));
         area_zk.setText("");
         rdb_markentender.setSelected(false);
     }
@@ -606,7 +656,7 @@ public class PersonDetailController implements Initializable {
         f.textProperty().addListener((obs, olD, newV) -> {
             if (newV.isEmpty()) {
                 Utilities.setRedErrorBorder(f);
-            } else if (!newV.matches("[a-zA-Z ]+")) {
+            } else if (!newV.matches("[a-zA-ZäöüÄÖÜ ]+")) {
                 Utilities.setRedErrorBorder(f);
             } else {
                 Utilities.removeRedErrorBorder(f);
@@ -615,31 +665,39 @@ public class PersonDetailController implements Initializable {
 
     }
 
-    private void remeber(Person aktPerson) {
+    private void remember(Person aktPerson) {
+        if (aktPerson == null) {
+            return;
+        }
         Person person = new Person();
         getPersonDetails(person);
         person.setPersonId(aktPerson.getPersonId());
-
         if (!person.deepEquals(aktPerson)) {
             onActionSpeichern(null);
         }
     }
 
-
     @FXML
     private void onActionFiltern(KeyEvent event) {
         FilteredList<Person> filteredData = new FilteredList<>(people, s -> true);
 
-        String filter = fld_FilterName.getText();
+        String filter = fld_FilterName.getText().trim();
         if (filter == null || filter.length() == 0) {
             filteredData.setPredicate(s -> true);
         } else {
             filteredData.setPredicate(s -> s.toString().toLowerCase().contains(filter.toLowerCase()));
         }
-       
-             
+
+        anchor_main.setDisable(lstview_personen.getItems().isEmpty());
+
         lstview_personen.setItems(filteredData);
-        onActionSortPersonen(null); 
+        onActionSortPersonen(null);
+    }
+
+    @FXML
+    private void onActionBulkyReport(ActionEvent event) {
+        remember(aktPerson);
+        ReportGenerator.newReport(null);
     }
 
 }

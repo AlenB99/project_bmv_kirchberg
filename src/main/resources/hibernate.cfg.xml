@@ -6,6 +6,11 @@
     <session-factory>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+     <!--   <property name="hibernate.connection.username">4AHIF_16</property>
+        <property name="hibernate.connection.password">reio21</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://193.170.118.29:54322/4A_01_Projekt</property>
+
+        -->
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">dodge1970</property>
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/db_trachtenverein</property>
@@ -16,8 +21,7 @@
         <property name="hibernate.c3p0.max_statements">10</property>
         <property name="hibernate.c3p0.min_size">10</property>
         <property name="hibernate.c3p0.timeout">100</property>
-        
-        <property name="show_sql">true</property>
+    
         <mapping class="at.htlstp.bejinariu.models.Person" />
         <mapping class="at.htlstp.bejinariu.models.Kleidungsstueck" />
         <mapping class="at.htlstp.bejinariu.models.KleidungsstueckId" />

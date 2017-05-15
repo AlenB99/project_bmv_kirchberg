@@ -170,6 +170,11 @@ public class Kleidungsstueck implements Serializable {
        
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Kleidungsstueck{" + "status=" + status + ", aenderungsdatum=" + aenderungsdatum + ", kleidungsgroesse=" + kleidungsgroesse + ", mitglied=" + mitglied + ", bezeichnung=" + bezeichnung + '}';
+    }
     
     
    

@@ -2,8 +2,8 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="PersistanceUnit" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
-    <class>at.htlstp.bejinariu.models.Person</class>
-    <class>at.htlstp.bejinariu.models.Kleidungsstueck</class>
+    <class> at.htlstp.bejinariu.Kleidungsstueck</class>
+    <class> at.htlstp.bejinariu.Person</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/db_trachtenverein"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>

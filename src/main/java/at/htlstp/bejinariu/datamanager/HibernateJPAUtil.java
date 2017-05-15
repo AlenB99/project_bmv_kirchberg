@@ -14,32 +14,29 @@ import org.hibernate.service.ServiceRegistry;
 
 public class HibernateJPAUtil {
 
-     private static final EntityManagerFactory EMF;
     private static final SessionFactory SESSIONFACTORY;
+    private static final EntityManagerFactory ENTITYMANAGERFACTORY;
 
     static {
         try {
-            EMF = Persistence.createEntityManagerFactory("PersistanceUnit");
             // loads configuration and mappings
             Configuration configuration = new Configuration().configure();
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-           
+
+            ENTITYMANAGERFACTORY = Persistence.createEntityManagerFactory("PersistanceUnit");
+
             // builds a session factory from the service registry
             SESSIONFACTORY = configuration.buildSessionFactory(serviceRegistry);
-      
+
         } catch (Exception ex) {
             System.out.println("EntityManagerFactory creation faild: " + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
 
-    public static EntityManagerFactory getEMF() {
-        return EMF;
-    }
-
     public static void close() {
-        EMF.close();
-        SESSIONFACTORY.close(); 
+        ENTITYMANAGERFACTORY.close();
+        SESSIONFACTORY.close();
     }
 
     public static SessionFactory getSessionFactory() {
