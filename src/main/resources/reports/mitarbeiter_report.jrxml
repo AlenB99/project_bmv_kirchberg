@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="065956b7-bab4-4d77-a3ba-75658e926e19">
 	<property name="ireport.zoom" value="1.4641000000000277"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="681"/>
+	<property name="ireport.y" value="573"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -59,7 +59,8 @@
 			<![CDATA[select Kleidungsstueck.*,CASE WHEN k_status=0 THEN 'Beim Verein'
        WHEN k_status=1 THEN 'Beim Mitglied'
        ELSE 'Nicht im Besitz'
-  END from Person
+  END, CASE WHEN k_groesse='' THEN '-' else k_groesse END as case2
+from Person
 inner join Kleidungsstueck on Kleidungsstueck.k_mitglied_nr = Person.P_nummer
 where P_nummer = $P{nummer};]]>
 		</queryString>
@@ -69,6 +70,7 @@ where P_nummer = $P{nummer};]]>
 		<field name="k_status" class="java.lang.Integer"/>
 		<field name="k_mitglied_nr" class="java.lang.Integer"/>
 		<field name="case" class="java.lang.String"/>
+		<field name="case2" class="java.lang.String"/>
 		<group name="k_bezeichnung">
 			<groupExpression><![CDATA[$F{k_bezeichnung}]]></groupExpression>
 		</group>
@@ -259,7 +261,7 @@ where P_nummer = $P{nummer}]]>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{k_groesse}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{case2}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

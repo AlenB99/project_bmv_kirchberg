@@ -49,6 +49,7 @@ public class Ausfuehrbar extends Application {
             loginFXApplication.setRemberedUser(postgreConnection.getUserRemembered());
             new Intro_Slide_FX(1000, loginFXApplication.getLoginStage(), Intro_Slide_FX.Position.MID).slideAndShowStage();
             loginFXApplication.getLoginStage().setOnCloseRequest(w -> closeStage(postgreConnection));
+            loginFXApplication.getLoginStage().getIcons().add(new Image(this.getClass().getResource("/images/Logo.png").toString()));
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             Utilities.showMessage("Fehler", "Datenbankverbindungsproblem", "Ein Problem mit der Datenbank beim Laden der User ist aufgetreten. Wenden Sie sich an den Hersteller", Alert.AlertType.ERROR, false);
@@ -66,19 +67,25 @@ public class Ausfuehrbar extends Application {
                 //try {
                 //Start des richtigen Programmsteils
                 //-----------------------------------------------------------------------------------
-              
+                String scene = "";  //
+                switch (loginFXApplication.getUser()) {
+                    case "User":
+                        scene = "personDetail.fxml"; //Namen müssen geändert werden. Zwei unterschiedliche Scenes für Administrator/Benutzer
+                        break;
+                    case "Administrator":
+                        scene = "andereScene.fxml"; 
+                        break;
+                }
                 stage = primaryStage;
-                FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/personDetail.fxml"));
+                FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/" + scene));
                 Parent root = (BorderPane) loader.load();
                 primaryStage.setScene(new Scene(root));
                 PersonDetailController controller = loader.getController();
-                  if (loginFXApplication.getUser().equals("User")){
-                 controller.readRights();    
-                }
+
                 primaryStage.setOnCloseRequest(e1 -> controller.close());
                 primaryStage.getIcons().add(new Image(this.getClass().getResource("/images/Logo.png").toString()));
                 primaryStage.setTitle("Trachtenverwaltungsprogramm v1.0");
-                new Intro_Slide_FX(1000, primaryStage, Intro_Slide_FX.Position.TOP).slideAndShowStage();
+                new Intro_Slide_FX(1000, primaryStage, Intro_Slide_FX.Position.MID).slideAndShowStage();
                 stage = primaryStage;
 
             } catch (Exception e2) {
@@ -86,10 +93,9 @@ public class Ausfuehrbar extends Application {
                 System.out.println(e2.getMessage());
             }
 
-        }); 
+        });
     }
 
-  
     private void closeStage(LoginDataHandler postgreConnection) {
 
         if ((postgreConnection != null)) {

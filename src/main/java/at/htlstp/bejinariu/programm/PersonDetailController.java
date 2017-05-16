@@ -230,8 +230,8 @@ public class PersonDetailController implements Initializable {
             //BusinessRule: Mitarbeiter besitzt kleidungsstuecke nicht 
             for (Node key : infos.keySet()) {
                 infos.get(key).valueProperty().addListener((o, oldV, newV) -> {
-                    if(newV == null){
-                        return; 
+                    if (newV == null) {
+                        return;
                     }
                     if (newV.equals(Kleidungsstueck.Status.Nicht_im_Besitz)) {
                         key.disableProperty().set(true);
@@ -261,7 +261,7 @@ public class PersonDetailController implements Initializable {
             //Alle Personen werden in die Liste geladen, Liste wird mit der ListView gekoppelt 
             people = FXCollections.observableArrayList((ArrayList<Person>) instance.loadAll());
 
-            //  people = instance.loadTestData(); 
+           //  people = instance.loadTestData(); 
             if (people == null) {
                 people = FXCollections.observableArrayList();
             }
@@ -278,7 +278,7 @@ public class PersonDetailController implements Initializable {
                 } else {
                     //Details der Person werden in die Grafik geladen 
                     aktPerson = newV;
-                    for(Node key: infos.keySet()){
+                    for (Node key : infos.keySet()) {
                         key.setDisable(false);
                         infos.get(key).setValue(null);
                     }
@@ -589,26 +589,29 @@ public class PersonDetailController implements Initializable {
         //Wrapperlisten verwendet. Diese werden dann der ListView zugewiesen. Aus SortedLists und FilteredList
         //kann weder geöscht noch eingefügt werden.
         ButtonType response = Utilities.showJesNoDialog("Person wirklich unwiderruflich löschen?", "Bestätigung benötigt");
+        System.out.println(aktPerson);
         Person loesche = aktPerson;
         if (response.equals(ButtonType.YES)) {
             int index = lstview_personen.getItems().indexOf(aktPerson);  //Index der Person in der Liste 
             if (aktPerson.getPersonId() != null) {
                 instance.deletePerson(aktPerson);   //Person aus der Datenbank löschen, wenn nötig
             }
-            if (people.contains(aktPerson)) {
-                //Person wird von der Liste gestrichen 
-                people.remove(loesche);
 
-            } else {
+            if (people.contains(aktPerson)) {
                 aktPerson = null;
                 lstview_personen.getSelectionModel().select(null);
+                //Person wird von der Liste gestrichen 
+
+                people.remove(loesche);
             }
+
+            lstview_personen.getSelectionModel().select(index);
 
             if (people.isEmpty()) {
                 newPerson();    //Keine Elemente vorhanden
             }
 
-            if (lstview_personen.getItems().isEmpty()) {
+            if (lstview_personen.getItems().isEmpty() && !lstview_personen.getItems().equals(people)) { //Bei der Suche 
                 anchor_main.setDisable(true);
             }
 
@@ -687,13 +690,11 @@ public class PersonDetailController implements Initializable {
         }
     }
 
-    
-    private int i = 0; 
-    
+    private int i = 0;
+
     @FXML
     private void onActionFiltern(KeyEvent event) {
-        
-        
+
         FilteredList<Person> filteredData = new FilteredList<>(people, s -> true);
 
         String filter = fld_FilterName.getText().trim();

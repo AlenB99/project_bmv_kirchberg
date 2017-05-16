@@ -59,7 +59,7 @@
 			<![CDATA[select Kleidungsstueck.*,CASE WHEN k_status=0 THEN 'Beim Verein'
        WHEN k_status=1 THEN 'Beim Mitglied'
        ELSE 'Nicht im Besitz'
-  END from Person
+  END, CASE WHEN k_groesse='' THEN '-' else k_groesse END as case2 from Person
 inner join Kleidungsstueck on Kleidungsstueck.k_mitglied_nr = Person.P_nummer
 where k_mitglied_nr = $P{mitarbeiternummer}]]>
 		</queryString>
@@ -69,6 +69,7 @@ where k_mitglied_nr = $P{mitarbeiternummer}]]>
 		<field name="k_status" class="java.lang.Integer"/>
 		<field name="k_mitglied_nr" class="java.lang.Integer"/>
 		<field name="case" class="java.lang.String"/>
+		<field name="case2" class="java.lang.String"/>
 		<group name="k_bezeichnung">
 			<groupExpression><![CDATA[$F{k_bezeichnung}]]></groupExpression>
 		</group>
@@ -250,7 +251,7 @@ where k_mitglied_nr = $P{mitarbeiternummer}]]>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{k_groesse}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{case2}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
