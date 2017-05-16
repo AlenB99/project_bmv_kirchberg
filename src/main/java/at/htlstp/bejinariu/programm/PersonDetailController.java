@@ -95,9 +95,7 @@ public class PersonDetailController implements Initializable {
         MOEGLICHKEITEN.add(Kleidungsstueck.Status.Nicht_im_Besitz);
         MOEGLICHKEITEN.add(Kleidungsstueck.Status.Beim_Mitglied);
 
-        GROESSEN.add(Kleidungsstueck.Groesse.L);
-        GROESSEN.add(Kleidungsstueck.Groesse.XLL);
-        GROESSEN.add(Kleidungsstueck.Groesse.XL);
+        GROESSEN.addAll(Arrays.asList(Kleidungsstueck.Groesse.XXS, Kleidungsstueck.Groesse.XS, Kleidungsstueck.Groesse.XXXL, Kleidungsstueck.Groesse.S, Kleidungsstueck.Groesse.M, Kleidungsstueck.Groesse.L, Kleidungsstueck.Groesse.XL, Kleidungsstueck.Groesse.XXL));
 
         nameComparator = (p1, p2) -> {
             int diff = p1.getNachname().compareTo(p2.getNachname());
@@ -232,14 +230,14 @@ public class PersonDetailController implements Initializable {
             //BusinessRule: Mitarbeiter besitzt kleidungsstuecke nicht 
             for (Node key : infos.keySet()) {
                 infos.get(key).valueProperty().addListener((o, oldV, newV) -> {
-
+                    if(newV == null){
+                        return; 
+                    }
                     if (newV.equals(Kleidungsstueck.Status.Nicht_im_Besitz)) {
                         key.disableProperty().set(true);
                         if (key instanceof TextField) {
-                            if (((TextField) key).isEditable()) { //Alle Int und DOuble Felder 
-                                ((TextField) key).setText("");
-                                Utilities.removeRedErrorBorder((TextField) key);
-                            }
+                            ((TextField) key).setText("");
+                            Utilities.removeRedErrorBorder((TextField) key);
                         } else {
                             ((ChoiceBox<Kleidungsstueck.Groesse>) key).getSelectionModel().select(null);
                         }
@@ -247,7 +245,11 @@ public class PersonDetailController implements Initializable {
                         key.disableProperty().set(false);
                         if (key instanceof TextField) {
                             if (((TextField) key).isEditable()) {
-                                ((TextField) key).setText("0");
+                                ((TextField) key).setText(0 + "");
+                            } else if (key == fld_tracht || key == fld_gillette || key == fld_dirndl) {
+                                ((TextField) key).setText("maßgeschneidert");
+                            } else {
+                                ((TextField) key).setText("keine Größe");
                             }
                         } else {
                             ((ChoiceBox<Kleidungsstueck.Groesse>) key).getSelectionModel().selectFirst();
@@ -256,7 +258,6 @@ public class PersonDetailController implements Initializable {
                     }
                 });
             }
-
             //Alle Personen werden in die Liste geladen, Liste wird mit der ListView gekoppelt 
             people = FXCollections.observableArrayList((ArrayList<Person>) instance.loadAll());
 
@@ -277,6 +278,10 @@ public class PersonDetailController implements Initializable {
                 } else {
                     //Details der Person werden in die Grafik geladen 
                     aktPerson = newV;
+                    for(Node key: infos.keySet()){
+                        key.setDisable(false);
+                        infos.get(key).setValue(null);
+                    }
                     setPersonDetails(aktPerson);
                 }
             });
@@ -467,12 +472,9 @@ public class PersonDetailController implements Initializable {
         ks.setStatus(status.getValue());
         ks.setAenderungsdatum(Date.from(zeitpunkt.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-        if (groesseNodeClass.equals(TextField.class
-        )) {
-            ks.setKleidungsgroesse(((TextField) groesse).getText());
-
-        } else if (groesseNodeClass.equals(ChoiceBox.class
-        )) {
+        if (groesseNodeClass.equals(TextField.class)) {
+            ks.setKleidungsgroesse(((TextField) groesse).getText().trim());
+        } else if (groesseNodeClass.equals(ChoiceBox.class)) {
             Kleidungsstueck.Groesse value = ((ChoiceBox<Kleidungsstueck.Groesse>) groesse).getValue();
             ks.setKleidungsgroesse(value == null ? "" : value.toString());
         }
@@ -481,17 +483,19 @@ public class PersonDetailController implements Initializable {
 
     private void speichereKleidungsstueckInDieGrafik(Kleidungsstueck ks, ChoiceBox<Kleidungsstueck.Status> choise, DatePicker dpick, Node node, Class<?> groesseNodeClass) {
 
-        choise.setValue(ks.getStatus());
-        dpick.setValue(ks.getAenderungsdatum().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-
-        if (groesseNodeClass.equals(TextField.class
-        )) {
+        if (groesseNodeClass.equals(TextField.class)) {
             ((TextField) node).setText(ks.getKleidungsgroesse());
 
-        } else if (groesseNodeClass.equals(ChoiceBox.class
-        )) {
-            ((ChoiceBox<Kleidungsstueck.Groesse>) node).setValue(Kleidungsstueck.Groesse.valueOf(ks.getKleidungsgroesse()));
+        } else if (groesseNodeClass.equals(ChoiceBox.class)) {
+            if (ks.getKleidungsgroesse().isEmpty()) {
+                ((ChoiceBox<Kleidungsstueck.Groesse>) node).setValue(null);
+            } else {
+                ((ChoiceBox<Kleidungsstueck.Groesse>) node).setValue(Kleidungsstueck.Groesse.valueOf(ks.getKleidungsgroesse()));
+            }
+
         }
+        choise.setValue(ks.getStatus());
+        dpick.setValue(ks.getAenderungsdatum().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
     }
 
     private void textFieldToIntField(TextField txtField, int minSize, int maxSize) {
@@ -593,8 +597,11 @@ public class PersonDetailController implements Initializable {
             }
             if (people.contains(aktPerson)) {
                 //Person wird von der Liste gestrichen 
-                aktPerson = null;
                 people.remove(loesche);
+
+            } else {
+                aktPerson = null;
+                lstview_personen.getSelectionModel().select(null);
             }
 
             if (people.isEmpty()) {
@@ -671,14 +678,22 @@ public class PersonDetailController implements Initializable {
         }
         Person person = new Person();
         getPersonDetails(person);
+
         person.setPersonId(aktPerson.getPersonId());
         if (!person.deepEquals(aktPerson)) {
             onActionSpeichern(null);
+            System.out.println("Grafik: " + person.toStringAdvanced());
+            System.out.println("Akt: " + aktPerson.toStringAdvanced());
         }
     }
 
+    
+    private int i = 0; 
+    
     @FXML
     private void onActionFiltern(KeyEvent event) {
+        
+        
         FilteredList<Person> filteredData = new FilteredList<>(people, s -> true);
 
         String filter = fld_FilterName.getText().trim();
@@ -687,8 +702,7 @@ public class PersonDetailController implements Initializable {
         } else {
             filteredData.setPredicate(s -> s.toString().toLowerCase().contains(filter.toLowerCase()));
         }
-
-        anchor_main.setDisable(lstview_personen.getItems().isEmpty());
+        anchor_main.setDisable(filteredData.isEmpty());
 
         lstview_personen.setItems(filteredData);
         onActionSortPersonen(null);
@@ -698,6 +712,11 @@ public class PersonDetailController implements Initializable {
     private void onActionBulkyReport(ActionEvent event) {
         remember(aktPerson);
         ReportGenerator.newReport(null);
+    }
+
+    public void readRights() {
+        btn_speichern.setDisable(true);
+        btn_loesche.setDisable(true);
     }
 
 }

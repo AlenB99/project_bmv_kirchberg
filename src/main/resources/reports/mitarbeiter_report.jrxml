@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="065956b7-bab4-4d77-a3ba-75658e926e19">
 	<property name="ireport.zoom" value="1.4641000000000277"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="26"/>
+	<property name="ireport.y" value="681"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -101,6 +101,10 @@ where P_nummer = $P{nummer}]]>
 	</background>
 	<title>
 		<band height="132" splitType="Stretch">
+			<image>
+				<reportElement x="413" y="0" width="142" height="132" uuid="26bafb8f-9887-4917-95b8-f1527d1afbf8"/>
+				<imageExpression><![CDATA["src/main/resources/images/Logo.png"]]></imageExpression>
+			</image>
 			<staticText>
 				<reportElement x="0" y="0" width="413" height="132" uuid="d1579ce1-ee5e-4b17-be16-a274a8da37dc"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -108,13 +112,6 @@ where P_nummer = $P{nummer}]]>
 				</textElement>
 				<text><![CDATA[Bestätigung der Annahme]]></text>
 			</staticText>
-			<line>
-				<reportElement x="0" y="0" width="555" height="1" forecolor="#BEE0FE" uuid="726796ad-8922-428a-ae98-540e3a99f51b"/>
-			</line>
-			<image>
-				<reportElement x="413" y="1" width="143" height="131" uuid="6b7e11e6-f1aa-4044-af84-d61c1bfb8830"/>
-				<imageExpression><![CDATA["src/main/resources/images/Logo.png"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -204,14 +201,14 @@ where P_nummer = $P{nummer}]]>
 	</pageHeader>
 	<detail>
 		<band height="396" splitType="Stretch">
-			<rectangle>
-				<reportElement mode="Opaque" x="20" y="1" width="120" height="20" forecolor="#BEE0FE" backcolor="#BEE0FE" uuid="c9f97345-d45e-4cdb-a0aa-ffabb681a045"/>
-			</rectangle>
 			<line>
 				<reportElement x="0" y="0" width="555" height="1" forecolor="#BEE0FE" uuid="e1813f43-3fbe-4fae-b001-2c39172225f5"/>
 			</line>
+			<rectangle>
+				<reportElement mode="Opaque" x="20" y="1" width="120" height="20" forecolor="#BEE0FE" backcolor="#BEE0FE" uuid="c9f97345-d45e-4cdb-a0aa-ffabb681a045"/>
+			</rectangle>
 			<staticText>
-				<reportElement x="20" y="1" width="120" height="20" uuid="5f4f3d11-1df2-499d-80a7-68158bb58e22"/>
+				<reportElement x="20" y="1" width="120" height="20" forecolor="#000000" backcolor="#BEE0FE" uuid="5f4f3d11-1df2-499d-80a7-68158bb58e22"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
@@ -312,22 +309,22 @@ where P_nummer = $P{nummer}]]>
 	</detail>
 	<pageFooter>
 		<band height="125" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="20" y="1" width="120" height="20" forecolor="#BEE0FE" backcolor="#BEE0FE" uuid="ca6d90f5-1417-43d3-b4a3-785c05611432"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="1" width="120" height="20" uuid="282d9b8b-41e4-4222-ba2c-e817b573923f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Übernahmebestätigung]]></text>
+			</staticText>
 			<line>
 				<reportElement x="0" y="0" width="555" height="1" forecolor="#BEE0FE" uuid="49a39bad-2e9a-4701-a7bf-4be0fe1735d8"/>
 			</line>
 			<line>
 				<reportElement x="20" y="100" width="150" height="1" uuid="d9415664-95c9-409e-b293-0dfd354ce4d6"/>
 			</line>
-			<rectangle>
-				<reportElement mode="Opaque" x="20" y="1" width="120" height="20" forecolor="#BEE0FE" backcolor="#BEE0FE" uuid="ca6d90f5-1417-43d3-b4a3-785c05611432"/>
-			</rectangle>
-			<staticText>
-				<reportElement mode="Transparent" x="20" y="1" width="120" height="20" forecolor="#000000" backcolor="#000000" uuid="282d9b8b-41e4-4222-ba2c-e817b573923f"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial"/>
-				</textElement>
-				<text><![CDATA[Übernahmebestätigung]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="20" y="101" width="120" height="15" uuid="5113621b-525c-40b7-b219-e89d628f7c44"/>
 				<textElement verticalAlignment="Middle" rotation="None">

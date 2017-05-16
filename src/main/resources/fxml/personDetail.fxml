@@ -132,7 +132,7 @@
                </toggleGroup>
             </RadioButton>
             <RadioButton fx:id="rdb_absteigend" layoutX="23.0" layoutY="99.0" mnemonicParsing="false" onAction="#onActionSortPersonen" text="Nach Familiennamen Z - A" toggleGroup="$sortieren" />
-            <TextField fx:id="fld_FilterName" layoutX="26.0" layoutY="661.0" onKeyPressed="#onActionFiltern" />
+            <TextField fx:id="fld_FilterName" layoutX="26.0" layoutY="661.0" onKeyReleased="#onActionFiltern" />
             <Label layoutX="31.0" layoutY="629.0" text="Suche:" />
             <Button layoutX="31.0" layoutY="728.0" maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" onAction="#onActionBulkyReport" text="Verein-Report generieren" />
          </children>

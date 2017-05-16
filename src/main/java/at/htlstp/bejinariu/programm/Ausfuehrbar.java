@@ -7,8 +7,10 @@ package at.htlstp.bejinariu.programm;
 
 import at.htlstp.bejinariu.launch.Intro_Slide_FX;
 import at.htlstp.bejinariu.graphictools.Utilities;
+import at.htlstp.bejinariu.launch.Login_FX;
 import java.sql.SQLException;
 import javafx.application.Application;
+import javafx.beans.Observable;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,7 +18,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import logindata.JDBCPostgreLoginDataHandler;
 import logindata.LoginDataHandler;
 
 /**
@@ -30,14 +32,11 @@ public class Ausfuehrbar extends Application {
     public static Stage getScene() {
         return stage;
     }
-    
-    
 
     @Override
     public void start(Stage primaryStage) {
 
         //Login
-        /*
         LoginDataHandler postgreConnection = new JDBCPostgreLoginDataHandler();
         Login_FX loginFXApplication = new Login_FX();
         //Anzeigen des Login-Screens, warten bis sich der User einloggt 
@@ -57,45 +56,42 @@ public class Ausfuehrbar extends Application {
 
         //Programm arbeitet erst nach dem Einloggen des Benutzers weiter 
         loginFXApplication.closeProperty().addListener((Observable e) -> {
-         
-        try {
 
-            //Rememberer User eintragen, Datenbankconncetion schließn 
-            postgreConnection.rememberAction(loginFXApplication.getRememberState(), loginFXApplication.getUser());
-            closeStage(postgreConnection);
-         */
-        try {
+            try {
 
-            //Start des richtigen Programmsteils
-            //-----------------------------------------------------------------------------------
-            //switch (loginFXApplication.getUser()) {
-            stage = primaryStage;
-            FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/personDetail.fxml"));
-            Parent root = (BorderPane) loader.load();
-            primaryStage.setScene(new Scene(root));
-            PersonDetailController controller = loader.getController();
-            primaryStage.setOnCloseRequest(e -> controller.close());
-            primaryStage.getIcons().add(new Image(this.getClass().getResource("/images/Logo.png").toString() ) ); 
-            primaryStage.setTitle("Trachtenverwaltungsprogramm v1.0");
-            new Intro_Slide_FX(1000, primaryStage, Intro_Slide_FX.Position.TOP).slideAndShowStage();
-            stage = primaryStage;
+                //Rememberer User eintragen, Datenbankconncetion schließn 
+                postgreConnection.rememberAction(loginFXApplication.getRememberState(), loginFXApplication.getUser());
+                closeStage(postgreConnection);
 
-        } catch (Exception e) {
-            Utilities.showMessage("Fehler", "Problem beim Starten", "Das Laden der Applikation schlug fehl. Wenden Sie sich an den Hersteller", Alert.AlertType.ERROR, false);
-            System.out.println(e.getMessage());
-        }
+                //try {
+                //Start des richtigen Programmsteils
+                //-----------------------------------------------------------------------------------
+              
+                stage = primaryStage;
+                FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/personDetail.fxml"));
+                Parent root = (BorderPane) loader.load();
+                primaryStage.setScene(new Scene(root));
+                PersonDetailController controller = loader.getController();
+                  if (loginFXApplication.getUser().equals("User")){
+                 controller.readRights();    
+                }
+                primaryStage.setOnCloseRequest(e1 -> controller.close());
+                primaryStage.getIcons().add(new Image(this.getClass().getResource("/images/Logo.png").toString()));
+                primaryStage.setTitle("Trachtenverwaltungsprogramm v1.0");
+                new Intro_Slide_FX(1000, primaryStage, Intro_Slide_FX.Position.TOP).slideAndShowStage();
+                stage = primaryStage;
+
+            } catch (Exception e2) {
+                Utilities.showMessage("Fehler", "Problem beim Starten", "Das Laden der Applikation schlug fehl. Wenden Sie sich an den Hersteller", Alert.AlertType.ERROR, false);
+                System.out.println(e2.getMessage());
+            }
+
+        }); 
     }
 
-    private void loadWithReadRights() {
-        System.out.println("Benutzer eingeloggt.");
-    }
-
-    private void loadWithAllRights() {
-
-    }
-
+  
     private void closeStage(LoginDataHandler postgreConnection) {
-      
+
         if ((postgreConnection != null)) {
             if (postgreConnection.isConnected()) {
                 try {

@@ -34,7 +34,7 @@
       <PasswordField fx:id="txtPassword" layoutX="186.0" layoutY="205.0" onAction="#onActionLogin" onKeyPressed="#onActionKeyTyped" prefHeight="25.0" prefWidth="315.0" style="-fx-background-radius: 0;" />
       <ImageView fitHeight="118.0" fitWidth="105.0" layoutX="24.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@-text.png" />
+            <Image url="@../images/Logo.png" />
          </image>
       </ImageView>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />

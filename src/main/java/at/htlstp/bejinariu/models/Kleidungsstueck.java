@@ -95,7 +95,6 @@ public class Kleidungsstueck implements Serializable {
         this.kleidungsgroesse = kleidungsgroesse;
     }
 
-
     //Enums 
     public static enum Status {
         Beim_Verein, Beim_Mitglied, Nicht_im_Besitz;
@@ -108,7 +107,7 @@ public class Kleidungsstueck implements Serializable {
     }
 
     public static enum Groesse {
-        XLL, L, XL;         //Zu verfolständigen 
+        XXS, XS, S, M, L, XL, XXL, XXXL;
     }
 
     @Override
@@ -139,35 +138,42 @@ public class Kleidungsstueck implements Serializable {
         }
         return true;
     }
-    
-       public boolean deepEquals(Object obj) {
+
+    public boolean deepEquals(Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj == null) {
+            System.out.println("obj");
             return false;
         }
         if (getClass() != obj.getClass()) {
+            System.out.println("class");
             return false;
         }
-          
+
         final Kleidungsstueck other = (Kleidungsstueck) obj;
         if (!Objects.equals(this.kleidungsgroesse, other.kleidungsgroesse)) {
+            System.out.println("1");
             return false;
         }
         if (!Objects.equals(this.mitglied, other.mitglied)) {
+            System.out.println("2");
             return false;
         }
-         if (!Objects.equals(this.bezeichnung, other.bezeichnung)) {
+        if (!Objects.equals(this.bezeichnung, other.bezeichnung)) {
+            System.out.println("3");
             return false;
         }
-          if (!Objects.equals(this.aenderungsdatum, other.aenderungsdatum)) {
+        if (!Objects.equals(this.aenderungsdatum, other.aenderungsdatum)) {
+            System.out.println("4");
             return false;
         }
-           if (!Objects.equals(this.status, other.status)) {
+        if (!Objects.equals(this.status, other.status)) {
+            System.out.println("5");
             return false;
         }
-       
+
         return true;
     }
 
@@ -175,8 +181,5 @@ public class Kleidungsstueck implements Serializable {
     public String toString() {
         return "Kleidungsstueck{" + "status=" + status + ", aenderungsdatum=" + aenderungsdatum + ", kleidungsgroesse=" + kleidungsgroesse + ", mitglied=" + mitglied + ", bezeichnung=" + bezeichnung + '}';
     }
-    
-    
-   
 
 }

@@ -23,7 +23,7 @@ import net.sf.jasperreports.engine.JasperPrint;
  */
 public class ReportGenerator {
 
-    public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddhhmm"); 
+    public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy_MM_dd_hhmm"); 
     public static final String JDBC_URL = "jdbc:postgresql://localhost:5432/db_trachtenverein";
     public static final String USERNAME = "postgres";
     public static final String PASSWORD = "dodge1970";
@@ -55,6 +55,7 @@ public class ReportGenerator {
             }
 
             InputStream is = ReportGenerator.class.getClassLoader().getResourceAsStream(jasper);
+           
             File document = fc.showSaveDialog(Ausfuehrbar.getScene().getOwner());
             if (document == null) {
                 return;
