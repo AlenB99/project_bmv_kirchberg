@@ -144,33 +144,31 @@ public class Kleidungsstueck implements Serializable {
             return true;
         }
         if (obj == null) {
-            System.out.println("obj");
+
             return false;
         }
         if (getClass() != obj.getClass()) {
-            System.out.println("class");
+
             return false;
         }
 
         final Kleidungsstueck other = (Kleidungsstueck) obj;
         if (!Objects.equals(this.kleidungsgroesse, other.kleidungsgroesse)) {
-            System.out.println("1");
             return false;
         }
         if (!Objects.equals(this.mitglied, other.mitglied)) {
-            System.out.println("2");
+
             return false;
         }
         if (!Objects.equals(this.bezeichnung, other.bezeichnung)) {
-            System.out.println("3");
+
             return false;
         }
         if (!Objects.equals(this.aenderungsdatum, other.aenderungsdatum)) {
-            System.out.println("4");
+
             return false;
         }
         if (!Objects.equals(this.status, other.status)) {
-            System.out.println("5");
             return false;
         }
 

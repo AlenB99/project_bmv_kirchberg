@@ -70,10 +70,11 @@ public class Ausfuehrbar extends Application {
                 String scene = "";  //
                 switch (loginFXApplication.getUser()) {
                     case "User":
-                        scene = "personDetail.fxml"; //Namen müssen geändert werden. Zwei unterschiedliche Scenes für Administrator/Benutzer
+                        scene = "andereScene.fxml";
                         break;
                     case "Administrator":
-                        scene = "andereScene.fxml"; 
+                        scene = "personDetail.fxml"; //Namen müssen geändert werden. Zwei unterschiedliche Scenes für Administrator/Benutzer
+
                         break;
                 }
                 stage = primaryStage;
@@ -89,6 +90,7 @@ public class Ausfuehrbar extends Application {
                 stage = primaryStage;
 
             } catch (Exception e2) {
+                System.out.println(e2.getMessage());
                 Utilities.showMessage("Fehler", "Problem beim Starten", "Das Laden der Applikation schlug fehl. Wenden Sie sich an den Hersteller", Alert.AlertType.ERROR, false);
                 System.out.println(e2.getMessage());
             }

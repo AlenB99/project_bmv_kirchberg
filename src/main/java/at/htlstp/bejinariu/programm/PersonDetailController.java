@@ -245,7 +245,7 @@ public class PersonDetailController implements Initializable {
                         key.disableProperty().set(false);
                         if (key instanceof TextField) {
                             if (((TextField) key).isEditable()) {
-                                ((TextField) key).setText(0 + "");
+                                ((TextField) key).setText("0");
                             } else if (key == fld_tracht || key == fld_gillette || key == fld_dirndl) {
                                 ((TextField) key).setText("maßgeschneidert");
                             } else {
@@ -261,7 +261,7 @@ public class PersonDetailController implements Initializable {
             //Alle Personen werden in die Liste geladen, Liste wird mit der ListView gekoppelt 
             people = FXCollections.observableArrayList((ArrayList<Person>) instance.loadAll());
 
-           //  people = instance.loadTestData(); 
+            //  people = instance.loadTestData(); 
             if (people == null) {
                 people = FXCollections.observableArrayList();
             }

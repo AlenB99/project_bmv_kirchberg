@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="065956b7-bab4-4d77-a3ba-75658e926e19">
-	<property name="ireport.zoom" value="1.4641000000000277"/>
+	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="573"/>
+	<property name="ireport.y" value="1141"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -56,14 +56,21 @@
 	<subDataset name="Kirchberg" uuid="aab069d6-742a-4a8c-80b4-052e3de4bb4e">
 		<parameter name="nummer" class="java.lang.Integer"/>
 		<queryString>
-			<![CDATA[select Kleidungsstueck.*,CASE WHEN k_status=0 THEN 'Beim Verein'
+			<![CDATA[select *, Kleidungsstueck.*,CASE WHEN k_status=0 THEN 'Beim Verein'
        WHEN k_status=1 THEN 'Beim Mitglied'
        ELSE 'Nicht im Besitz'
-  END, CASE WHEN k_groesse='' THEN '-' else k_groesse END as case2
+  END, CASE WHEN k_groesse='' THEN '-' else k_groesse END as case2, CASE WHEN p_marketender=true THEN 'ist im Besitz eines Markentenders' else 'ist nicht im Besitz eines Markentenders' END as case3
 from Person
 inner join Kleidungsstueck on Kleidungsstueck.k_mitglied_nr = Person.P_nummer
 where P_nummer = $P{nummer};]]>
 		</queryString>
+		<field name="p_nummer" class="java.lang.Integer"/>
+		<field name="p_anmerkung" class="java.lang.String"/>
+		<field name="p_email" class="java.lang.String"/>
+		<field name="p_marketender" class="java.lang.Boolean"/>
+		<field name="p_nachname" class="java.lang.String"/>
+		<field name="p_telefonnr" class="java.lang.String"/>
+		<field name="p_vorname" class="java.lang.String"/>
 		<field name="k_bezeichnung" class="java.lang.String"/>
 		<field name="k_aenderungsdatum" class="java.sql.Timestamp"/>
 		<field name="k_groesse" class="java.lang.String"/>
@@ -71,6 +78,7 @@ where P_nummer = $P{nummer};]]>
 		<field name="k_mitglied_nr" class="java.lang.Integer"/>
 		<field name="case" class="java.lang.String"/>
 		<field name="case2" class="java.lang.String"/>
+		<field name="case3" class="java.lang.String"/>
 		<group name="k_bezeichnung">
 			<groupExpression><![CDATA[$F{k_bezeichnung}]]></groupExpression>
 		</group>
@@ -88,7 +96,7 @@ where P_nummer = $P{nummer};]]>
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select * from Person
+		<![CDATA[select *,CASE WHEN p_marketender=true THEN 'ist im Besitz eines Markentendergewands' else 'ist nicht im Besitz eines Markentendergewands' END as case3 from Person 
 where P_nummer = $P{nummer}]]>
 	</queryString>
 	<field name="p_nummer" class="java.lang.Integer"/>
@@ -98,6 +106,7 @@ where P_nummer = $P{nummer}]]>
 	<field name="p_nachname" class="java.lang.String"/>
 	<field name="p_telefonnr" class="java.lang.String"/>
 	<field name="p_vorname" class="java.lang.String"/>
+	<field name="case3" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -217,7 +226,7 @@ where P_nummer = $P{nummer}]]>
 				<text><![CDATA[Kleidungstücke]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement key="table 1" style="table 1" x="0" y="54" width="555" height="342" uuid="9b355dc6-c18f-48c1-9f4f-63c142144eff"/>
+				<reportElement key="table 1" style="table 1" x="0" y="41" width="555" height="326" uuid="9b355dc6-c18f-48c1-9f4f-63c142144eff"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Kirchberg" uuid="3d0c7906-dc7c-41bb-bb3c-d5af5b98b315">
 						<datasetParameter name="nummer">
@@ -235,7 +244,7 @@ where P_nummer = $P{nummer}]]>
 								<text><![CDATA[Kleidungsstück]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell style="table 1_TD" height="25" rowSpan="1">
+						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
 							<textField>
 								<reportElement x="0" y="0" width="140" height="25" uuid="3b09cbb8-7677-4dcc-b73f-da2894c77f29"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -255,7 +264,7 @@ where P_nummer = $P{nummer}]]>
 								<text><![CDATA[Größe]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell style="table 1_TD" height="25" rowSpan="1">
+						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
 							<textField>
 								<reportElement x="0" y="0" width="140" height="25" uuid="bb551443-a9cc-4dcf-a9d5-779b741b15fd"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -275,7 +284,7 @@ where P_nummer = $P{nummer}]]>
 								<text><![CDATA[Besitztum]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell style="table 1_TD" height="25" rowSpan="1">
+						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
 							<textField>
 								<reportElement x="0" y="0" width="140" height="25" uuid="77a336dd-1bf8-44f0-88ed-d52b55f0fddf"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -295,7 +304,7 @@ where P_nummer = $P{nummer}]]>
 								<text><![CDATA[Letztes Änderungsdatum]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell style="table 1_TD" height="25" rowSpan="1">
+						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
 							<textField pattern="dd-MM-yyyy">
 								<reportElement x="0" y="0" width="140" height="25" uuid="b02f5a02-4d0c-4420-82fb-5377fde5fe4f"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -307,6 +316,11 @@ where P_nummer = $P{nummer}]]>
 					</jr:column>
 				</jr:table>
 			</componentElement>
+			<textField>
+				<reportElement x="0" y="378" width="555" height="18" uuid="e3ce1142-aa71-4aed-992c-01a5ff77292a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{p_vorname} + "  "+ $F{p_nachname}  + "  "+  $F{case3} + "."]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
@@ -328,11 +342,11 @@ where P_nummer = $P{nummer}]]>
 				<reportElement x="20" y="100" width="150" height="1" uuid="d9415664-95c9-409e-b293-0dfd354ce4d6"/>
 			</line>
 			<staticText>
-				<reportElement x="20" y="101" width="120" height="15" uuid="5113621b-525c-40b7-b219-e89d628f7c44"/>
+				<reportElement x="20" y="101" width="135" height="15" uuid="5113621b-525c-40b7-b219-e89d628f7c44"/>
 				<textElement verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial"/>
 				</textElement>
-				<text><![CDATA[Unterschrift des Zeugwarts]]></text>
+				<text><![CDATA[Unterschrift des Ausstellers]]></text>
 			</staticText>
 			<line>
 				<reportElement x="203" y="100" width="150" height="1" uuid="8cac7118-33c2-41b2-b6bc-700957593b2c"/>
@@ -354,17 +368,24 @@ where P_nummer = $P{nummer}]]>
 				</textElement>
 				<text><![CDATA[Unterschrift von]]></text>
 			</staticText>
-			<textField pattern="MMMMM dd, yyyy">
+			<textField pattern="dd. MMMMM yyyy">
 				<reportElement x="203" y="81" width="100" height="20" uuid="3b4b783e-f453-4b82-bb32-73fab6567510"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="458" y="103" width="100" height="20" uuid="3931a366-8ee8-4c1c-b308-508da5d0d06b"/>
+				<reportElement x="458" y="101" width="100" height="20" uuid="3931a366-8ee8-4c1c-b308-508da5d0d06b"/>
 				<textElement>
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{p_nachname}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="20" y="36" width="515" height="28" uuid="1f6229fb-4f8f-42c9-984d-76ecf1dee0f4"/>
+				<textElement verticalAlignment="Middle" rotation="None">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Hiermit bestätige ich die Kenntnisnahme des obigen Sachverhalts und die sorgfältige Übergabe der Kleidungstücke.]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
 </jasperReport>
