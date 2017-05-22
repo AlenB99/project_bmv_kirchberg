@@ -67,6 +67,7 @@ public class Ausfuehrbar extends Application {
                 //try {
                 //Start des richtigen Programmsteils
                 //-----------------------------------------------------------------------------------
+               
                 String scene = "";  //
                 switch (loginFXApplication.getUser()) {
                     case "User":
