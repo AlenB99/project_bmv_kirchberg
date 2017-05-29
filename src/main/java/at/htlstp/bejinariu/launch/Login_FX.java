@@ -1,6 +1,10 @@
 package at.htlstp.bejinariu.launch;
 
 import java.io.IOException;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 public class Login_FX {
 
@@ -34,6 +39,7 @@ public class Login_FX {
     Controller die Berechtigung benötigt
      */
     void close() {
+        loginStage.setOpacity(0.0);
         close.set(true);
         this.loginStage.close();
     }
@@ -67,7 +73,7 @@ public class Login_FX {
     /*
     Soll die darüberliegende Anwendung über den Zustand der CheckBox(Login Merken)
     informieren 
-    */
+     */
     public boolean getRememberState() {
         return controller.remember();
     }
@@ -92,10 +98,12 @@ public class Login_FX {
     public Stage getLoginStage() {
         return loginStage;
     }
+
     public void setData(LoginData logins) {
         this.loginData = logins;
     }
-     public void setRemberedUser(String user) {
+
+    public void setRemberedUser(String user) {
         controller.setRember(user);
     }
 

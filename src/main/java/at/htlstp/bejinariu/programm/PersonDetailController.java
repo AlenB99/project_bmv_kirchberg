@@ -9,7 +9,7 @@ import at.htlstp.bejinariu.datamanager.HibernateDataMananger;
 import at.htlstp.bejinariu.graphictools.Utilities;
 import at.htlstp.bejinariu.models.Kleidungsstueck;
 import at.htlstp.bejinariu.models.Person;
-import at.htlstp.bejinariu.reports.ReportGenerator;
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -43,10 +43,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
 //Das ist ein Kommentar 
@@ -173,20 +176,18 @@ public class PersonDetailController implements Initializable {
     @FXML
     private RadioButton rdb_markentender;
     @FXML
-    private Button btn_report;
-    @FXML
     private Button btn_neu;
     @FXML
     private Label lbl_info;
-    @FXML
     private RadioButton rdb_aufsteigend;
-    @FXML
     private RadioButton rdb_absteigend;
-    @FXML
-    private ToggleGroup sortieren;
     @FXML
     private TextField fld_FilterName;
     private Map<Node, ChoiceBox<Kleidungsstueck.Status>> infos = new HashMap<>();
+    @FXML
+    private Button btn_sort;
+    @FXML
+    private TitledPane pane_Verwaltungstools;
 
     /**
      * Initializes the controller class.
@@ -258,6 +259,17 @@ public class PersonDetailController implements Initializable {
                     }
                 });
             }
+            area_zk.textProperty().addListener((ob, oldV, newV) -> {
+                if (newV == null) {
+                    return;
+                }
+                if (newV.length() > 255) {
+                    Utilities.setRedErrorBorder(area_zk);
+                } else {
+                    Utilities.removeRedErrorBorder(area_zk);
+                }
+            });
+
             //Alle Personen werden in die Liste geladen, Liste wird mit der ListView gekoppelt 
             people = FXCollections.observableArrayList((ArrayList<Person>) instance.loadAll());
 
@@ -293,7 +305,7 @@ public class PersonDetailController implements Initializable {
                     lbl_info.setVisible(true);
                     lbl_info.setTextFill(Color.web("green"));
                 } else {
-                    lbl_info.setText("Info: " + Utilities.fehlerCountProperty().size() + " Textfelder beinhalten falsche Werte oder sind leer*");
+                    lbl_info.setText("Info: " + Utilities.fehlerCountProperty().size() + " Textfelder beinhalten falsche Werte, sind leer oder beinhalten zu viel Text!*");
                     lbl_info.setVisible(true);
                     lbl_info.setTextFill(Color.web("red"));
                 }
@@ -308,7 +320,9 @@ public class PersonDetailController implements Initializable {
                 //Eine neue Person wird benötigt 
                 onActionNeuePerson(null);
             }
-
+            
+            
+            System.out.println("Initialised");
         } catch (Exception e) {
             System.out.println(e.getMessage() + e.getClass());
         }
@@ -628,10 +642,12 @@ public class PersonDetailController implements Initializable {
     @FXML
     private void onActionSortPersonen(ActionEvent event) {
 
-        if (rdb_aufsteigend.isSelected()) {
+        if ("⬇".equals(btn_sort.getText())) {
             lstview_personen.setItems(lstview_personen.getItems().sorted(nameComparator));
-        } else if (rdb_absteigend.isSelected()) {
+            btn_sort.setText("⬆");
+        } else {
             lstview_personen.setItems(lstview_personen.getItems().sorted((p1, p2) -> -nameComparator.compare(p1, p2)));
+            btn_sort.setText("⬇");
         }
         lstview_personen.refresh();
     }
@@ -715,9 +731,21 @@ public class PersonDetailController implements Initializable {
         ReportGenerator.newReport(null);
     }
 
-    public void readRights() {
-        btn_speichern.setDisable(true);
-        btn_loesche.setDisable(true);
+    public void readingUser() {
+        pane_Verwaltungstools.setCollapsible(false);
+        pane_Verwaltungstools.setText("Willkommen");
+
+    }
+
+    @FXML
+    private void onActionCredits(ActionEvent event) {
+        try {
+            File video = new File(this.getClass().getResource("/videos/video.mp4").getFile());
+            System.out.println(video.exists());
+            CreditsGenerator.showCredits(new Stage(StageStyle.UNDECORATED), video);
+        } catch (Exception e) {
+            System.out.println("URL falsch" + e.getMessage());
+        }
     }
 
 }

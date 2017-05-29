@@ -1,141 +1,177 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.htlstp.bejinariu.programm.PersonDetailController">
-   <center>
-      <AnchorPane id="AnchorPane" fx:id="anchor_main" prefHeight="787.0" prefWidth="789.0" style="-fx-border-color: gray;">
-         <children>
-            <Label layoutX="45.0" layoutY="75.0" text="Nachname:" />
-            <Label layoutX="331.0" layoutY="39.0" text="E-Mail:" />
-            <Label layoutX="331.0" layoutY="72.0" text="Telefon Nummer:" />
-            <TextField fx:id="fld_vorname" layoutX="123.0" layoutY="38.0" prefHeight="25.0" prefWidth="173.0" />
-            <TextField fx:id="fld_nachname" layoutX="123.0" layoutY="71.0" prefHeight="25.0" prefWidth="173.0" />
-            <TextField fx:id="fld_telefonnr" layoutX="436.0" layoutY="68.0" prefHeight="25.0" prefWidth="280.0" />
-            
-            <TextField fx:id="fld_email" layoutX="438.0" layoutY="33.0" prefHeight="25.0" prefWidth="278.0" />
-            <Button fx:id="btn_speichern" layoutX="25.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionSpeichern" prefHeight="25.0" prefWidth="160.0" text="Speichern" AnchorPane.leftAnchor="20.0" />
-            <GridPane hgap="10.0" layoutX="2.0" layoutY="138.0" prefHeight="555.0" prefWidth="751.0">
-              <columnConstraints>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="185.0" minWidth="10.0" prefWidth="119.0" />
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="291.0" minWidth="10.0" prefWidth="110.0" />
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="369.0" minWidth="10.0" prefWidth="203.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="424.0" minWidth="10.0" prefWidth="210.0" />
-              </columnConstraints>
-              <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label text="Hemd" GridPane.rowIndex="2" />
-                  <ChoiceBox fx:id="choise_hemd" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <DatePicker fx:id="dpick_hemd" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                  <TextField fx:id="fld_hemd" maxWidth="147.0" prefHeight="25.0" prefWidth="147.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label text="Hut" GridPane.rowIndex="1" />
-                  <ChoiceBox fx:id="choise_hut" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <DatePicker fx:id="dpick_hut" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <TextField fx:id="fld_hut" maxWidth="134.0" prefHeight="25.0" prefWidth="134.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="Hose" GridPane.rowIndex="3" />
-                  <ChoiceBox fx:id="choise_hose" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <DatePicker fx:id="dpick_hose" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                  <TextField fx:id="fld_hose" maxWidth="126.0" prefHeight="25.0" prefWidth="126.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Winterjacke" GridPane.rowIndex="4" />
-                  <DatePicker fx:id="dpick_wjacke" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                  <ChoiceBox fx:id="choise_wjacke" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                  <ChoiceBox fx:id="choise_wjacke_groesse" prefHeight="25.0" prefWidth="127.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Label text="Größe" GridPane.columnIndex="1" />
-                  <Label text="Besitztum" GridPane.columnIndex="2" />
-                  <Label text="Besitztum gewechselt am" GridPane.columnIndex="3" />
-                  <Label text="Trachtenjanker" GridPane.rowIndex="5" />
-                  <ChoiceBox fx:id="choise_tracht" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                  <DatePicker fx:id="dpick_tracht" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                  <TextField fx:id="fld_tracht" editable="false" prefWidth="120.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <Label text="Bündel" GridPane.rowIndex="6" />
-                  <TextField fx:id="fld_buendel" editable="false" prefWidth="120.0" text="keine Größe" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <ChoiceBox fx:id="choise_buendel" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                  <DatePicker fx:id="dpick_buendel" GridPane.columnIndex="3" GridPane.rowIndex="6" />
-                  <Label text="Gillette" GridPane.rowIndex="7" />
-                  <TextField fx:id="fld_gillette" editable="false" prefWidth="120.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                  <ChoiceBox fx:id="choise_gillette" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                  <DatePicker fx:id="dpick_gillette" GridPane.columnIndex="3" GridPane.rowIndex="7" />
-                  <Label text="Dirndl" GridPane.rowIndex="8" />
-                  <TextField fx:id="fld_dirndl" editable="false" prefWidth="120.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                  <ChoiceBox fx:id="choise_dirndl" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-                  <DatePicker fx:id="dpick_dirndl" GridPane.columnIndex="3" GridPane.rowIndex="8" />
-                  <Label text="Gürtel" GridPane.rowIndex="9" />
-                  <Label text="Schuhe" GridPane.rowIndex="10" />
-                  <TextField fx:id="fld_guertel" maxWidth="126.0" prefHeight="25.0" prefWidth="126.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                  <TextField fx:id="fld_schuhe" maxWidth="126.0" prefHeight="25.0" prefWidth="126.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                  <ChoiceBox fx:id="choise_schuhe" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-                  <ChoiceBox fx:id="choise_guertel" prefHeight="25.0" prefWidth="146.0" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-                  <DatePicker fx:id="dpick_guertel" GridPane.columnIndex="3" GridPane.rowIndex="9" />
-                  <DatePicker fx:id="dpick_schuhe" GridPane.columnIndex="3" GridPane.rowIndex="10" />
-                  <Label text="Zusätzliche Kleidung" GridPane.rowIndex="11" />
-                  <TextArea fx:id="area_zk" prefHeight="87.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11" GridPane.rowSpan="2">
-                     <GridPane.margin>
-                        <Insets top="20.0" />
-                     </GridPane.margin>
-                  </TextArea>
-                  <RadioButton fx:id="rdb_markentender" mnemonicParsing="false" text="Markentender" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="11">
-                     <GridPane.margin>
-                        <Insets left="26.0" />
-                     </GridPane.margin>
-                  </RadioButton>
-               </children>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </GridPane>
-            <Label layoutX="49.0" layoutY="42.0" text="Vorname:" />
-            <Button fx:id="btn_loesche" layoutX="213.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionLoeschen" prefWidth="160.0" text="Mitglied löschen" AnchorPane.leftAnchor="213.0" AnchorPane.rightAnchor="409.0" />
-            <Button fx:id="btn_report" layoutX="298.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionSingleReportGenerate" prefWidth="160.0" text="Report generieren" AnchorPane.rightAnchor="20.0" />
-            <Button fx:id="btn_neu" layoutX="416.0" layoutY="734.0" mnemonicParsing="false" onAction="#onActionNeuePerson" prefHeight="25.0" prefWidth="160.0" text="Neues Mitglied" />
-            <Label fx:id="lbl_info" layoutX="21.0" layoutY="693.0" text="Info: " visible="false" />
-         </children>
-      </AnchorPane>
-   </center>
+<BorderPane style="-fx-background-color: white;" stylesheets="@../styles/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.htlstp.bejinariu.programm.PersonDetailController">
    <left>
-      <ListView fx:id="lstview_personen" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: gray;" BorderPane.alignment="CENTER" />
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <center>
+            <ListView fx:id="lstview_personen" prefHeight="731.0" prefWidth="200.0" style="-fx-border-color: gray;" BorderPane.alignment="CENTER" />
+         </center>
+         <bottom>
+            <Accordion BorderPane.alignment="CENTER">
+              <panes>
+                <TitledPane id="verwaltungtoolpane" fx:id="pane_Verwaltungstools" text="Verwaltungstools" textFill="WHITE">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="170.0" prefWidth="200.0" style="-fx-background-color: #f4f4f4;">
+                           <children>
+                              <MenuButton id="reportbtn" layoutX="41.0" layoutY="131.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="159.0" text="Bestätigung speicheren" textFill="WHITE">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" onAction="#onActionSingleReportGenerate" text="Für das selektiert Mitglied" />
+                                  <MenuItem mnemonicParsing="false" onAction="#onActionBulkyReport" text="Für den ganzen Verein" />
+                                </items>
+                              </MenuButton>
+                              <Button fx:id="btn_neu" layoutX="41.0" layoutY="11.0" mnemonicParsing="false" onAction="#onActionNeuePerson" prefHeight="25.0" prefWidth="160.0" text="Neues Mitglied" />
+                              <Button fx:id="btn_loesche" layoutX="41.0" layoutY="51.0" mnemonicParsing="false" onAction="#onActionLoeschen" prefWidth="160.0" text="Mitglied löschen" />
+                              <Button fx:id="btn_speichern" layoutX="41.0" layoutY="91.0" mnemonicParsing="false" onAction="#onActionSpeichern" prefHeight="25.0" prefWidth="160.0" text="Speichern" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </bottom>
+         <top>
+            <BorderPane prefHeight="36.0" prefWidth="206.0" BorderPane.alignment="CENTER">
+               <left>
+                  <TextField id="textfieldfilter" fx:id="fld_FilterName" onKeyReleased="#onActionFiltern" promptText="In der Tabelle suchen" BorderPane.alignment="CENTER" />
+               </left>
+               <right>
+                  <Button id="buttonsort" fx:id="btn_sort" mnemonicParsing="false" onAction="#onActionSortPersonen" prefHeight="37.0" prefWidth="37.0" text="⬇" BorderPane.alignment="CENTER" />
+               </right>
+               <top>
+                  <TitledPane animated="false" collapsible="false" text="Kontaktinformationen" textFill="WHITE" BorderPane.alignment="CENTER">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="215.0" prefWidth="240.0">
+                           <children>
+                              <Label layoutX="15.0" layoutY="55.0" text="Nachname" />
+                              <Label layoutX="15.0" layoutY="105.0" text="E-Mail" />
+                              <TextField fx:id="fld_vorname" layoutX="15.0" layoutY="25.0" prefHeight="10.0" prefWidth="210.0" />
+                              <TextField fx:id="fld_nachname" layoutX="16.0" layoutY="75.0" prefHeight="25.0" prefWidth="210.0" />
+                              
+                                    <TextField fx:id="fld_email" layoutX="15.0" layoutY="125.0" prefHeight="25.0" prefWidth="210.0" />
+                              <Label layoutX="14.0" layoutY="5.0" prefHeight="10.0" text="Vorname" />
+                              <TextField fx:id="fld_telefonnr" layoutX="15.0" layoutY="175.0" prefHeight="25.0" prefWidth="210.0" />
+                              <Label layoutX="14.0" layoutY="155.0" text="Telefonnummer" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </TitledPane>
+               </top>
+            </BorderPane>
+         </top>
+      </BorderPane>
    </left>
-   <right>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: gray;" BorderPane.alignment="CENTER">
-         <children>
-            <Label layoutX="23.0" layoutY="29.0" text="Sortieren:" />
-            <RadioButton fx:id="rdb_aufsteigend" layoutX="23.0" layoutY="64.0" mnemonicParsing="false" onAction="#onActionSortPersonen" selected="true" text="Nach Familiennamen A - Z">
-               <toggleGroup>
-                  <ToggleGroup fx:id="sortieren" />
-               </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="rdb_absteigend" layoutX="23.0" layoutY="99.0" mnemonicParsing="false" onAction="#onActionSortPersonen" text="Nach Familiennamen Z - A" toggleGroup="$sortieren" />
-            <TextField fx:id="fld_FilterName" layoutX="26.0" layoutY="661.0" onKeyReleased="#onActionFiltern" />
-            <Label layoutX="31.0" layoutY="629.0" text="Suche:" />
-            <Button layoutX="31.0" layoutY="728.0" maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" onAction="#onActionBulkyReport" text="Verein-Report generieren" />
-         </children>
-      </AnchorPane>
-   </right>
+   <center>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <center>
+            <AnchorPane id="AnchorPane" fx:id="anchor_main" prefHeight="787.0" prefWidth="789.0" style="-fx-background-color: #f4f4f4;" BorderPane.alignment="CENTER">
+               <children>
+                  <GridPane layoutX="1.0" prefHeight="750.0" prefWidth="751.0">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="291.0" minWidth="10.0" prefWidth="187.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="369.0" minWidth="10.0" prefWidth="187.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="424.0" minWidth="10.0" prefWidth="187.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Hemd" GridPane.rowIndex="2" />
+                        <ChoiceBox fx:id="choise_hemd" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <DatePicker fx:id="dpick_hemd" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <TextField fx:id="fld_hemd" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Hut" GridPane.rowIndex="1" />
+                        <ChoiceBox fx:id="choise_hut" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <DatePicker fx:id="dpick_hut" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <TextField fx:id="fld_hut" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Hose" GridPane.rowIndex="3" />
+                        <ChoiceBox fx:id="choise_hose" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <DatePicker fx:id="dpick_hose" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <TextField fx:id="fld_hose" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Winterjacke" GridPane.rowIndex="4" />
+                        <DatePicker fx:id="dpick_wjacke" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                        <ChoiceBox fx:id="choise_wjacke" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <ChoiceBox fx:id="choise_wjacke_groesse" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="Größe" GridPane.columnIndex="1" />
+                        <Label text="Besitztum" GridPane.columnIndex="2" />
+                        <Label text="Besitztum gewechselt am" GridPane.columnIndex="3" />
+                        <Label text="Trachtenjanker" GridPane.rowIndex="5" />
+                        <ChoiceBox fx:id="choise_tracht" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <DatePicker fx:id="dpick_tracht" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                        <TextField fx:id="fld_tracht" editable="false" maxWidth="150.0" prefWidth="150.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label text="Bündel" GridPane.rowIndex="6" />
+                        <TextField fx:id="fld_buendel" editable="false" maxWidth="150.0" prefHeight="24.0" prefWidth="150.0" text="keine Größe" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <ChoiceBox fx:id="choise_buendel" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                        <DatePicker fx:id="dpick_buendel" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+                        <Label text="Gillette" GridPane.rowIndex="7" />
+                        <TextField fx:id="fld_gillette" editable="false" maxWidth="150.0" prefWidth="150.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <ChoiceBox fx:id="choise_gillette" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                        <DatePicker fx:id="dpick_gillette" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                        <Label text="Dirndl" GridPane.rowIndex="8" />
+                        <TextField fx:id="fld_dirndl" editable="false" maxWidth="150.0" prefWidth="150.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                        <ChoiceBox fx:id="choise_dirndl" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                        <DatePicker fx:id="dpick_dirndl" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+                        <Label text="Gürtel" GridPane.rowIndex="9" />
+                        <Label text="Schuhe" GridPane.rowIndex="10" />
+                        <TextField fx:id="fld_guertel" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                        <TextField fx:id="fld_schuhe" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                        <ChoiceBox fx:id="choise_schuhe" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                        <ChoiceBox fx:id="choise_guertel" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                        <DatePicker fx:id="dpick_guertel" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="9" />
+                        <DatePicker fx:id="dpick_schuhe" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="10" />
+                        <Label text="Zusätzliche Kleidung" GridPane.rowIndex="11" GridPane.valignment="TOP" />
+                        <TextArea fx:id="area_zk" prefHeight="31.0" prefWidth="353.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11" GridPane.rowSpan="3">
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </TextArea>
+                        <RadioButton fx:id="rdb_markentender" mnemonicParsing="false" prefHeight="17.0" prefWidth="114.0" text="Markentender" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.rowSpan="2">
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </RadioButton>
+                        <Button mnemonicParsing="false" onAction="#onActionCredits" text="Credits" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </GridPane>
+                  <Label fx:id="lbl_info" layoutX="21.0" layoutY="693.0" text="Info: " visible="false" />
+               </children>
+            </AnchorPane>
+         </center>
+      </BorderPane>
+   </center>
 </BorderPane>

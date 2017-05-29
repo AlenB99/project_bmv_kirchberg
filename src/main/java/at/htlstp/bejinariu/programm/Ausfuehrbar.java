@@ -67,26 +67,18 @@ public class Ausfuehrbar extends Application {
                 //try {
                 //Start des richtigen Programmsteils
                 //-----------------------------------------------------------------------------------
-               
-                String scene = "";  //
-                switch (loginFXApplication.getUser()) {
-                    case "User":
-                        scene = "andereScene.fxml";
-                        break;
-                    case "Administrator":
-                        scene = "personDetail.fxml"; //Namen müssen geändert werden. Zwei unterschiedliche Scenes für Administrator/Benutzer
-
-                        break;
-                }
                 stage = primaryStage;
-                FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/" + scene));
+                FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/personDetail.fxml"));
                 Parent root = (BorderPane) loader.load();
                 primaryStage.setScene(new Scene(root));
                 PersonDetailController controller = loader.getController();
-
+                if ("User".equals(loginFXApplication.getUser())) {
+                    controller.readingUser();           //Bestimmte Programmteile ausblenden
+                }
                 primaryStage.setOnCloseRequest(e1 -> controller.close());
                 primaryStage.getIcons().add(new Image(this.getClass().getResource("/images/Logo.png").toString()));
                 primaryStage.setTitle("Trachtenverwaltungsprogramm v1.0");
+
                 new Intro_Slide_FX(1000, primaryStage, Intro_Slide_FX.Position.MID).slideAndShowStage();
                 stage = primaryStage;
 

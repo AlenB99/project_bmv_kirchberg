@@ -3,13 +3,9 @@ package at.htlstp.bejinariu.graphictools;
 
 
 //Imports 
-import java.util.HashSet;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
@@ -24,11 +20,11 @@ import javafx.scene.text.FontWeight;
  */
 public class Utilities {
 
-    private static final ObservableSet<TextField> fehlerCount = FXCollections.observableSet(); 
+    private static final ObservableSet<Node> fehlerCount = FXCollections.observableSet(); 
 
    
 
-    public static  ObservableSet<TextField> fehlerCountProperty() {
+    public static  ObservableSet<Node> fehlerCountProperty() {
         return fehlerCount;
     }
 
@@ -113,9 +109,20 @@ public class Utilities {
         fehlerCount.add(txtField);
         txtField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
     }
+    
+    public static void setRedErrorBorder(TextArea txt) {
+        fehlerCount.add(txt);
+        txt.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+    }
+    
 
     public static void removeRedErrorBorder(TextField txtField) {
         fehlerCount.remove(txtField);
         txtField.setStyle("-fx-border-color: none; -fx-border-width: 2px;");
+    }
+    
+     public static void removeRedErrorBorder(TextArea txt) {
+        fehlerCount.remove(txt);
+        txt.setStyle("-fx-border-color: none; -fx-border-width: 2px;");
     }
 }
