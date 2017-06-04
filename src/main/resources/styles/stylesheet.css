@@ -18,6 +18,18 @@
 }
 
 
+.date-picker > .arrow-button {
+   -fx-background-color: #4D6DB1;
+   	-fx-border-radius: 0 0 0 0; 
+	    -fx-border-color: #4D6DB1;
+	-fx-background-radius: 0 0 0 0;
+}
+
+.date-picker > .arrow-button > .arrow {
+   -fx-background-color: white;
+}
+
+
 *:focused {
  -fx-border-color: #7297e5;
 }
@@ -27,6 +39,7 @@
     -fx-font-family: "Segoe UI Semibold";
 	-fx-border-radius: 0 0 0 0; 
 	-fx-background-radius: 0 0 0 0;
+	-fx-border-color: #222E57;
 }
 
 .text-area{
@@ -76,6 +89,7 @@
     -fx-font-family: "Segoe UI Semibold";
 	-fx-border-radius: 0 0 0 0; 
 	-fx-background-radius: 0 0 0 0;
+	-fx-text-fill: white;
 	-fx-background-color: #4D6DB1;
     -fx-border-color: #222E57;
     -fx-border-width: 2;
@@ -97,6 +111,8 @@
   -fx-text-fill: white;
 }
 
+
+
 .menu-item .label {
     -fx-text-fill: white;
 }
@@ -105,15 +121,14 @@
      -fx-background-color: #7297e5;
 }
 
-
-
-.context-menu {
-    -fx-skin: "com.sun.javafx.scene.control.skin.ContextMenuSkin";
-    -fx-background-color: #4D6DB1;
-    -fx-border-color: #222E57;
-    -fx-border-width: 2;
-    -fx-padding: 0.333333em 0.083333em 0.666667em 0.083333em; /* 4 1 8 1 */
+.radio-button .radio{
+  -fx-font-size: 8pt;
+  	-fx-text-fill: white;
+    -fx-font-family: "Segoe UI Semibold";
+	-fx-background-color: #4D6DB1;
+    -fx-mark-color: white;
 }
+
 
 
 .titled-pane > .title {
@@ -124,6 +139,15 @@
 	-fx-background-color: #4D6DB1;
 	-fx-mark-color: white;
 }
+.context-menu {
+    -fx-skin: "com.sun.javafx.scene.control.skin.ContextMenuSkin";
+    -fx-background-color: #4D6DB1;
+    -fx-border-color: #222E57;
+    -fx-border-width: 2;
+    -fx-padding: 0.333333em 0.083333em 0.666667em 0.083333em; /* 4 1 8 1 */
+}
+
+
 
 
 

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
@@ -19,7 +23,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane style="-fx-background-color: white;" stylesheets="@../styles/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.htlstp.bejinariu.programm.PersonDetailController">
+<BorderPane style="-fx-background-color: white;" stylesheets="@../styles/stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.htlstp.bejinariu.programm.PersonDetailController">
    <left>
       <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <center>
@@ -109,46 +113,46 @@
                     </rowConstraints>
                      <children>
                         <Label text="Hemd" GridPane.rowIndex="2" />
-                        <ChoiceBox fx:id="choise_hemd" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <ChoiceBox id="reportbtn" fx:id="choise_hemd" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <DatePicker fx:id="dpick_hemd" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                         <TextField fx:id="fld_hemd" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label text="Hut" GridPane.rowIndex="1" />
-                        <ChoiceBox fx:id="choise_hut" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <ChoiceBox id="reportbtn" fx:id="choise_hut" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <DatePicker fx:id="dpick_hut" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <TextField fx:id="fld_hut" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="Hose" GridPane.rowIndex="3" />
-                        <ChoiceBox fx:id="choise_hose" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <ChoiceBox id="reportbtn" fx:id="choise_hose" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                         <DatePicker fx:id="dpick_hose" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                         <TextField fx:id="fld_hose" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="Winterjacke" GridPane.rowIndex="4" />
                         <DatePicker fx:id="dpick_wjacke" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                        <ChoiceBox fx:id="choise_wjacke" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                        <ChoiceBox fx:id="choise_wjacke_groesse" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <ChoiceBox id="reportbtn" fx:id="choise_wjacke" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <ChoiceBox id="reportbtn" fx:id="choise_wjacke_groesse" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label text="Größe" GridPane.columnIndex="1" />
                         <Label text="Besitztum" GridPane.columnIndex="2" />
                         <Label text="Besitztum gewechselt am" GridPane.columnIndex="3" />
                         <Label text="Trachtenjanker" GridPane.rowIndex="5" />
-                        <ChoiceBox fx:id="choise_tracht" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <ChoiceBox id="reportbtn" fx:id="choise_tracht" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                         <DatePicker fx:id="dpick_tracht" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                         <TextField fx:id="fld_tracht" editable="false" maxWidth="150.0" prefWidth="150.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label text="Bündel" GridPane.rowIndex="6" />
                         <TextField fx:id="fld_buendel" editable="false" maxWidth="150.0" prefHeight="24.0" prefWidth="150.0" text="keine Größe" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <ChoiceBox fx:id="choise_buendel" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                        <ChoiceBox id="reportbtn" fx:id="choise_buendel" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                         <DatePicker fx:id="dpick_buendel" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="6" />
                         <Label text="Gillette" GridPane.rowIndex="7" />
                         <TextField fx:id="fld_gillette" editable="false" maxWidth="150.0" prefWidth="150.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                        <ChoiceBox fx:id="choise_gillette" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                        <ChoiceBox id="reportbtn" fx:id="choise_gillette" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                         <DatePicker fx:id="dpick_gillette" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="7" />
                         <Label text="Dirndl" GridPane.rowIndex="8" />
                         <TextField fx:id="fld_dirndl" editable="false" maxWidth="150.0" prefWidth="150.0" text="maßgeschneidert" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                        <ChoiceBox fx:id="choise_dirndl" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                        <ChoiceBox id="reportbtn" fx:id="choise_dirndl" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
                         <DatePicker fx:id="dpick_dirndl" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="8" />
                         <Label text="Gürtel" GridPane.rowIndex="9" />
                         <Label text="Schuhe" GridPane.rowIndex="10" />
                         <TextField fx:id="fld_guertel" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                         <TextField fx:id="fld_schuhe" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                        <ChoiceBox fx:id="choise_schuhe" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-                        <ChoiceBox fx:id="choise_guertel" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                        <ChoiceBox id="reportbtn" fx:id="choise_schuhe" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                        <ChoiceBox id="reportbtn" fx:id="choise_guertel" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="9" />
                         <DatePicker fx:id="dpick_guertel" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="9" />
                         <DatePicker fx:id="dpick_schuhe" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="10" />
                         <Label text="Zusätzliche Kleidung" GridPane.rowIndex="11" GridPane.valignment="TOP" />
