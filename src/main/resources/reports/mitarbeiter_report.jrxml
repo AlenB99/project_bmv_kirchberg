@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="065956b7-bab4-4d77-a3ba-75658e926e19">
-	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.zoom" value="1.366026910730141"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="1141"/>
+	<property name="ireport.y" value="611"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -226,7 +226,7 @@ where P_nummer = $P{nummer}]]>
 				<text><![CDATA[Kleidungstücke]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement key="table 1" style="table 1" x="0" y="41" width="555" height="326" uuid="9b355dc6-c18f-48c1-9f4f-63c142144eff"/>
+				<reportElement key="table 1" style="table 1" x="0" y="41" width="555" height="308" uuid="9b355dc6-c18f-48c1-9f4f-63c142144eff"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Kirchberg" uuid="3d0c7906-dc7c-41bb-bb3c-d5af5b98b315">
 						<datasetParameter name="nummer">
@@ -320,6 +320,14 @@ where P_nummer = $P{nummer}]]>
 				<reportElement x="0" y="378" width="555" height="18" uuid="e3ce1142-aa71-4aed-992c-01a5ff77292a"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{p_vorname} + "  "+ $F{p_nachname}  + "  "+  $F{case3} + "."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="358" width="119" height="20" uuid="89ae1589-7500-40f1-b376-53b3480a97e9"/>
+				<text><![CDATA[Zusätzliche Bemerkung]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="119" y="358" width="436" height="20" uuid="84ceb8c8-195c-4d9d-a383-49b7a15aa81b"/>
+				<textFieldExpression><![CDATA[$F{p_anmerkung}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

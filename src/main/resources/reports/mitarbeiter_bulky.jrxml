@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="065956b7-bab4-4d77-a3ba-75658e926e19">
 	<property name="ireport.zoom" value="1.331000000000031"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="27"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -56,10 +56,10 @@
 	<subDataset name="Kirchberg" uuid="aab069d6-742a-4a8c-80b4-052e3de4bb4e">
 		<parameter name="mitarbeiternummer" class="java.lang.Integer"/>
 		<queryString>
-			<![CDATA[select Kleidungsstueck.*,CASE WHEN k_status=0 THEN 'Beim Verein'
+			<![CDATA[select Kleidungsstueck.*, Person.*,CASE WHEN k_status=0 THEN 'Beim Verein'
        WHEN k_status=1 THEN 'Beim Mitglied'
        ELSE 'Nicht im Besitz'
-  END, CASE WHEN k_groesse='' THEN '-' else k_groesse END as case2 from Person
+  END, CASE WHEN k_groesse='' THEN '-' else k_groesse END as case2, CASE WHEN p_marketender=true THEN 'ist im Besitz eines Markentenders' else 'ist nicht im Besitz eines Markentenders' END as case3 from Person
 inner join Kleidungsstueck on Kleidungsstueck.k_mitglied_nr = Person.P_nummer
 where k_mitglied_nr = $P{mitarbeiternummer}]]>
 		</queryString>
@@ -68,8 +68,16 @@ where k_mitglied_nr = $P{mitarbeiternummer}]]>
 		<field name="k_groesse" class="java.lang.String"/>
 		<field name="k_status" class="java.lang.Integer"/>
 		<field name="k_mitglied_nr" class="java.lang.Integer"/>
+		<field name="p_nummer" class="java.lang.Integer"/>
+		<field name="p_anmerkung" class="java.lang.String"/>
+		<field name="p_email" class="java.lang.String"/>
+		<field name="p_marketender" class="java.lang.Boolean"/>
+		<field name="p_nachname" class="java.lang.String"/>
+		<field name="p_telefonnr" class="java.lang.String"/>
+		<field name="p_vorname" class="java.lang.String"/>
 		<field name="case" class="java.lang.String"/>
 		<field name="case2" class="java.lang.String"/>
+		<field name="case3" class="java.lang.String"/>
 		<group name="k_bezeichnung">
 			<groupExpression><![CDATA[$F{k_bezeichnung}]]></groupExpression>
 		</group>
@@ -207,7 +215,7 @@ where k_mitglied_nr = $P{mitarbeiternummer}]]>
 	<detail>
 		<band height="396" splitType="Stretch">
 			<componentElement>
-				<reportElement key="table 1" style="table 1" x="0" y="34" width="555" height="348" uuid="9b355dc6-c18f-48c1-9f4f-63c142144eff"/>
+				<reportElement key="table 1" style="table 1" x="0" y="34" width="555" height="319" uuid="9b355dc6-c18f-48c1-9f4f-63c142144eff"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Kirchberg" uuid="d8ea8334-8225-4f90-b6d9-d3fa475b59ba">
 						<datasetParameter name="mitarbeiternummer">
@@ -310,6 +318,19 @@ where k_mitglied_nr = $P{mitarbeiternummer}]]>
 			<line>
 				<reportElement x="0" y="0" width="555" height="1" forecolor="#BEE0FE" uuid="9a034c3c-a4c9-48eb-8cc5-44f79ac6bbdc"/>
 			</line>
+			<textField>
+				<reportElement x="119" y="358" width="436" height="20" uuid="38589ca3-1458-4ffa-8c9d-6fd8f6437397"/>
+				<textFieldExpression><![CDATA[$F{p_anmerkung}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="358" width="119" height="20" uuid="7bf870e7-c48f-45c9-bd3a-a91bf67c161c"/>
+				<text><![CDATA[Zusätzliche Bemerkung]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="378" width="555" height="18" uuid="95ac5bf7-2410-4985-9cd9-fba13c05d9c1"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{p_vorname} + "  "+ $F{p_nachname}  + "  "+  $F{case3} + "."]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
