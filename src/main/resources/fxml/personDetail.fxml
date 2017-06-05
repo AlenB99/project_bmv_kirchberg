@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
@@ -23,7 +19,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane style="-fx-background-color: white;" stylesheets="@../styles/stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.htlstp.bejinariu.programm.PersonDetailController">
+<BorderPane style="-fx-background-color: white;" stylesheets="@../styles/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.htlstp.bejinariu.programm.PersonDetailController">
    <left>
       <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <center>
@@ -161,18 +157,18 @@
                               <Insets />
                            </GridPane.margin>
                         </TextArea>
-                        <RadioButton fx:id="rdb_markentender" mnemonicParsing="false" prefHeight="17.0" prefWidth="114.0" text="Markentender" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.rowSpan="2">
+                        <RadioButton fx:id="rdb_markentender" mnemonicParsing="false" prefHeight="17.0" prefWidth="114.0" text="Markentender" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="11">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
                         </RadioButton>
-                        <Button mnemonicParsing="false" onAction="#onActionCredits" text="Credits" />
+                        <Button mnemonicParsing="false" onAction="#onActionCredits" text="Credits" GridPane.rowIndex="12" />
+                        <Label fx:id="lbl_info" prefHeight="28.0" prefWidth="173.0" text="Info: " visible="false" GridPane.columnIndex="3" GridPane.rowIndex="12" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </GridPane>
-                  <Label fx:id="lbl_info" layoutX="21.0" layoutY="693.0" text="Info: " visible="false" />
                </children>
             </AnchorPane>
          </center>

@@ -83,13 +83,17 @@
 -fx-border-width: 0;
 }
 
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+    -fx-background-color: #4D6DB1;
+    -fx-text-fill: white;
+}
 
 #reportbtn {
     -fx-font-size: 8pt;
     -fx-font-family: "Segoe UI Semibold";
 	-fx-border-radius: 0 0 0 0; 
 	-fx-background-radius: 0 0 0 0;
-	-fx-text-fill: white;
+	-fx-text-fill: #FFFFFF;
 	-fx-background-color: #4D6DB1;
     -fx-border-color: #222E57;
     -fx-border-width: 2;
