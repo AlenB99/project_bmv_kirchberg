@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="065956b7-bab4-4d77-a3ba-75658e926e19">
-	<property name="ireport.zoom" value="1.331000000000031"/>
+	<property name="ireport.zoom" value="1.1289478601075564"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="27"/>
+	<property name="ireport.y" value="627"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -61,7 +61,8 @@
        ELSE 'Nicht im Besitz'
   END, CASE WHEN k_groesse='' THEN '-' else k_groesse END as case2, CASE WHEN p_marketender=true THEN 'ist im Besitz eines Markentenders' else 'ist nicht im Besitz eines Markentenders' END as case3 from Person
 inner join Kleidungsstueck on Kleidungsstueck.k_mitglied_nr = Person.P_nummer
-where k_mitglied_nr = $P{mitarbeiternummer}]]>
+where k_mitglied_nr = $P{mitarbeiternummer}
+order by Kleidungsstueck.k_bezeichnung;]]>
 		</queryString>
 		<field name="k_bezeichnung" class="java.lang.String"/>
 		<field name="k_aenderungsdatum" class="java.sql.Timestamp"/>
@@ -92,13 +93,27 @@ where k_mitglied_nr = $P{mitarbeiternummer}]]>
 		</group>
 	</subDataset>
 	<queryString>
-		<![CDATA[select p_nummer, p_vorname, p_nachname, p_telefonnr, p_email from Person]]>
+		<![CDATA[select Kleidungsstueck.*, Person.*,CASE WHEN k_status=0 THEN 'Beim Verein'
+       WHEN k_status=1 THEN 'Beim Mitglied'
+       ELSE 'Nicht im Besitz'
+  END, CASE WHEN k_groesse='' THEN '-' else k_groesse END as case2, CASE WHEN p_marketender=true THEN 'ist im Besitz eines Markentenders' else 'ist nicht im Besitz eines Markentenders' END as case3 from Person
+inner join Kleidungsstueck on Kleidungsstueck.k_mitglied_nr = Person.P_nummer]]>
 	</queryString>
+	<field name="k_bezeichnung" class="java.lang.String"/>
+	<field name="k_aenderungsdatum" class="java.sql.Timestamp"/>
+	<field name="k_groesse" class="java.lang.String"/>
+	<field name="k_status" class="java.lang.Integer"/>
+	<field name="k_mitglied_nr" class="java.lang.Integer"/>
 	<field name="p_nummer" class="java.lang.Integer"/>
-	<field name="p_vorname" class="java.lang.String"/>
+	<field name="p_anmerkung" class="java.lang.String"/>
+	<field name="p_email" class="java.lang.String"/>
+	<field name="p_marketender" class="java.lang.Boolean"/>
 	<field name="p_nachname" class="java.lang.String"/>
 	<field name="p_telefonnr" class="java.lang.String"/>
-	<field name="p_email" class="java.lang.String"/>
+	<field name="p_vorname" class="java.lang.String"/>
+	<field name="case" class="java.lang.String"/>
+	<field name="case2" class="java.lang.String"/>
+	<field name="case3" class="java.lang.String"/>
 	<variable name="variable1" class="java.lang.String">
 		<variableExpression><![CDATA[$F{p_nachname}]]></variableExpression>
 		<initialValueExpression><![CDATA[$F{p_nachname}]]></initialValueExpression>
@@ -112,110 +127,113 @@ where k_mitglied_nr = $P{mitarbeiternummer}]]>
 	<pageHeader>
 		<band height="135" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="413" height="132" uuid="d1579ce1-ee5e-4b17-be16-a274a8da37dc"/>
+				<reportElement x="0" y="0" width="411" height="86" uuid="d1579ce1-ee5e-4b17-be16-a274a8da37dc"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="28"/>
+					<font fontName="Arial" size="24"/>
 				</textElement>
-				<text><![CDATA[Bestätigung der Annahme]]></text>
+				<text><![CDATA[Übernahmebestätigung]]></text>
 			</staticText>
-			<image>
-				<reportElement x="413" y="0" width="142" height="132" uuid="26bafb8f-9887-4917-95b8-f1527d1afbf8"/>
-				<imageExpression><![CDATA["src/main/resources/images/Logo.png"]]></imageExpression>
-			</image>
 			<line>
 				<reportElement x="0" y="0" width="555" height="1" forecolor="#BEE0FE" uuid="e1813f43-3fbe-4fae-b001-2c39172225f5"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="86" width="411" height="49" uuid="866df85e-8ea5-4c12-aedc-afd7fdbf07ff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="18"/>
+				</textElement>
+				<text><![CDATA[Blasmusikverein Kirchberg an der Pielach]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="134" width="555" height="1" forecolor="#BEE0FE" uuid="667dfcff-09ff-4e65-880d-7da206ca7df9"/>
 			</line>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="112">
 			<textField>
-				<reportElement x="188" y="35" width="100" height="15" uuid="75ca7edb-681f-4382-aa23-0648f30459ce"/>
+				<reportElement x="192" y="22" width="100" height="15" uuid="75ca7edb-681f-4382-aa23-0648f30459ce"/>
 				<textElement verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{p_vorname}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="367" y="51" width="85" height="15" uuid="224d4f33-0bc0-41db-b252-027553c0b354"/>
+				<reportElement x="371" y="38" width="85" height="15" uuid="224d4f33-0bc0-41db-b252-027553c0b354"/>
 				<textElement verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Nachname]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="367" y="35" width="100" height="15" uuid="7c4d9ccc-a19d-44f4-93f5-a14e9ef0c33e"/>
+				<reportElement x="371" y="22" width="100" height="15" uuid="7c4d9ccc-a19d-44f4-93f5-a14e9ef0c33e"/>
 				<textElement verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{p_nachname}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="367" y="50" width="150" height="1" forecolor="#000000" uuid="9d7fb0bc-1a3b-4792-b48c-60fe678ef104"/>
+				<reportElement x="371" y="37" width="150" height="1" forecolor="#000000" uuid="9d7fb0bc-1a3b-4792-b48c-60fe678ef104"/>
 			</line>
 			<line>
-				<reportElement x="188" y="96" width="150" height="1" forecolor="#000000" uuid="93d43934-4fd9-4438-97d8-1102a5c10ee4"/>
+				<reportElement x="192" y="83" width="150" height="1" forecolor="#000000" uuid="93d43934-4fd9-4438-97d8-1102a5c10ee4"/>
 			</line>
 			<line>
-				<reportElement x="188" y="50" width="150" height="1" forecolor="#000000" uuid="0f219fa6-0410-4054-8022-30f52ff765a8"/>
+				<reportElement x="192" y="37" width="150" height="1" forecolor="#000000" uuid="0f219fa6-0410-4054-8022-30f52ff765a8"/>
 			</line>
 			<line>
-				<reportElement x="366" y="96" width="150" height="1" forecolor="#000000" uuid="ba6672ef-e96d-4c4e-baf8-21d1858f3b85"/>
+				<reportElement x="370" y="83" width="150" height="1" forecolor="#000000" uuid="ba6672ef-e96d-4c4e-baf8-21d1858f3b85"/>
 			</line>
 			<staticText>
-				<reportElement x="188" y="97" width="85" height="15" uuid="cb9e88ee-cdd4-45e0-941b-b78f4aa99b29"/>
+				<reportElement x="192" y="84" width="85" height="15" uuid="cb9e88ee-cdd4-45e0-941b-b78f4aa99b29"/>
 				<textElement verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[E-Mail]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="366" y="81" width="100" height="15" uuid="d20809ea-0c65-4ee0-a936-b312107e80d1"/>
+				<reportElement x="370" y="68" width="100" height="15" uuid="d20809ea-0c65-4ee0-a936-b312107e80d1"/>
 				<textElement verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{p_telefonnr}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="188" y="81" width="100" height="15" uuid="db90ff04-d415-4d38-bd6e-298fbf397243"/>
+				<reportElement x="192" y="68" width="100" height="15" uuid="db90ff04-d415-4d38-bd6e-298fbf397243"/>
 				<textElement verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{p_email}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="188" y="51" width="85" height="15" uuid="1c9bce79-8041-432a-bd94-5c1d1484291d"/>
+				<reportElement x="192" y="38" width="85" height="15" uuid="1c9bce79-8041-432a-bd94-5c1d1484291d"/>
 				<textElement verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Vorname]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="366" y="97" width="85" height="15" uuid="2d1527fe-5cbb-44ce-adb4-c5b6fd8c46a1"/>
+				<reportElement x="370" y="84" width="85" height="15" uuid="2d1527fe-5cbb-44ce-adb4-c5b6fd8c46a1"/>
 				<textElement verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Telefonnummer]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement mode="Opaque" x="20" y="4" width="120" height="20" forecolor="#BEE0FE" backcolor="#BEE0FE" uuid="ce6ae168-fffe-4c06-9df7-6fadfba0f182"/>
+				<reportElement mode="Opaque" x="20" y="0" width="120" height="20" forecolor="#BEE0FE" backcolor="#BEE0FE" uuid="ce6ae168-fffe-4c06-9df7-6fadfba0f182"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="20" y="4" width="120" height="20" uuid="a2298040-a1d1-442c-9fb7-57aa24595845"/>
+				<reportElement x="20" y="0" width="120" height="20" uuid="a2298040-a1d1-442c-9fb7-57aa24595845"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Kontaktdaten]]></text>
 			</staticText>
-			<line>
-				<reportElement x="0" y="3" width="555" height="1" forecolor="#BEE0FE" uuid="667dfcff-09ff-4e65-880d-7da206ca7df9"/>
-			</line>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="396" splitType="Stretch">
 			<componentElement>
-				<reportElement key="table 1" style="table 1" x="0" y="34" width="555" height="319" uuid="9b355dc6-c18f-48c1-9f4f-63c142144eff"/>
+				<reportElement key="table 1" style="table 1" x="0" y="35" width="555" height="293" uuid="9b355dc6-c18f-48c1-9f4f-63c142144eff"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Kirchberg" uuid="d8ea8334-8225-4f90-b6d9-d3fa475b59ba">
 						<datasetParameter name="mitarbeiternummer">
@@ -306,6 +324,9 @@ where k_mitglied_nr = $P{mitarbeiternummer}]]>
 				</jr:table>
 			</componentElement>
 			<rectangle>
+				<reportElement x="121" y="348" width="434" height="48" uuid="a9498d39-2bc7-486a-bcc2-77489105e980"/>
+			</rectangle>
+			<rectangle>
 				<reportElement mode="Opaque" x="20" y="1" width="120" height="20" forecolor="#BEE0FE" backcolor="#BEE0FE" uuid="c9f97345-d45e-4cdb-a0aa-ffabb681a045"/>
 			</rectangle>
 			<staticText>
@@ -319,15 +340,15 @@ where k_mitglied_nr = $P{mitarbeiternummer}]]>
 				<reportElement x="0" y="0" width="555" height="1" forecolor="#BEE0FE" uuid="9a034c3c-a4c9-48eb-8cc5-44f79ac6bbdc"/>
 			</line>
 			<textField>
-				<reportElement x="119" y="358" width="436" height="20" uuid="38589ca3-1458-4ffa-8c9d-6fd8f6437397"/>
+				<reportElement x="140" y="348" width="415" height="48" uuid="38589ca3-1458-4ffa-8c9d-6fd8f6437397"/>
 				<textFieldExpression><![CDATA[$F{p_anmerkung}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="358" width="119" height="20" uuid="7bf870e7-c48f-45c9-bd3a-a91bf67c161c"/>
+				<reportElement x="1" y="348" width="119" height="29" uuid="7bf870e7-c48f-45c9-bd3a-a91bf67c161c"/>
 				<text><![CDATA[Zusätzliche Bemerkung]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="378" width="555" height="18" uuid="95ac5bf7-2410-4985-9cd9-fba13c05d9c1"/>
+				<reportElement x="0" y="328" width="555" height="18" uuid="95ac5bf7-2410-4985-9cd9-fba13c05d9c1"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{p_vorname} + "  "+ $F{p_nachname}  + "  "+  $F{case3} + "."]]></textFieldExpression>
 			</textField>
@@ -362,7 +383,7 @@ where k_mitglied_nr = $P{mitarbeiternummer}]]>
 				<reportElement x="203" y="100" width="150" height="1" uuid="8cac7118-33c2-41b2-b6bc-700957593b2c"/>
 			</line>
 			<staticText>
-				<reportElement x="203" y="101" width="85" height="15" uuid="c2e3e44f-dcea-4be6-a8e1-2c818105bc69"/>
+				<reportElement x="203" y="100" width="85" height="15" uuid="c2e3e44f-dcea-4be6-a8e1-2c818105bc69"/>
 				<textElement verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial"/>
 				</textElement>
@@ -378,17 +399,24 @@ where k_mitglied_nr = $P{mitarbeiternummer}]]>
 				</textElement>
 				<text><![CDATA[Unterschrift von]]></text>
 			</staticText>
-			<textField pattern="dd.MM.yyyy" isBlankWhenNull="true">
+			<textField pattern="dd-MM-yyyy" isBlankWhenNull="true">
 				<reportElement x="203" y="81" width="100" height="20" uuid="3b4b783e-f453-4b82-bb32-73fab6567510"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="456" y="101" width="100" height="15" uuid="ace199da-9c99-4c0f-9555-28f7fb782f49"/>
+				<reportElement x="456" y="100" width="100" height="15" uuid="ace199da-9c99-4c0f-9555-28f7fb782f49"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{variable1}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="1" y="36" width="554" height="29" uuid="84a2a104-7a0b-4862-8713-fcd071ee94d4"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Hiermit bestätige ich die Kenntnisnahme des obigen Sachverhalts und die sorgfältige Übergabe der Kleidungstücke.]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
 </jasperReport>

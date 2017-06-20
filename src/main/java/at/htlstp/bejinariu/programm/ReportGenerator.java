@@ -29,6 +29,7 @@ public class ReportGenerator {
     public static final String PASSWORD = "dodge1970";
 
     public static void newReport(Person p) {
+       
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException ex) {

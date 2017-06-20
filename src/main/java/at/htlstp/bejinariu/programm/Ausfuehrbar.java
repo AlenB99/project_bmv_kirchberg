@@ -25,6 +25,8 @@ import logindata.LoginDataHandler;
  *
  * @author Niko
  */
+
+//"src/main/resources/images/Logo.png"
 public class Ausfuehrbar extends Application {
 
     private static Stage stage;

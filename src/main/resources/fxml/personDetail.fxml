@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane style="-fx-background-color: white;" stylesheets="@../styles/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.htlstp.bejinariu.programm.PersonDetailController">
+<BorderPane style="-fx-background-color: white;" stylesheets="@../styles/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.htlstp.bejinariu.programm.PersonDetailController">
    <left>
       <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <center>
@@ -152,7 +152,7 @@
                         <DatePicker fx:id="dpick_guertel" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="9" />
                         <DatePicker fx:id="dpick_schuhe" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="10" />
                         <Label text="Zusätzliche Kleidung" GridPane.rowIndex="11" GridPane.valignment="TOP" />
-                        <TextArea fx:id="area_zk" prefHeight="31.0" prefWidth="353.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11" GridPane.rowSpan="3">
+                        <TextArea fx:id="area_zk" prefHeight="31.0" prefWidth="353.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11" GridPane.rowSpan="3">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
